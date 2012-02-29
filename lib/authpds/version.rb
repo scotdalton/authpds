@@ -1,0 +1,3 @@
+module Authpds
+  VERSION = "0.0.1"
+end
