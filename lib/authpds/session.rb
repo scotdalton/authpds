@@ -110,8 +110,7 @@ module Authpds
 
       # Mapping of PDS attributes
       def pds_attributes(value = nil)
-        raise ArgumentError.new("Argument Error in #{self.class}. :pds_attributes do not include :username.") if value[:username].nil? unless value.nil?
-        rw_config(:pds_attributes, value, {:username => "id", :id => "id", :name => "name"})
+        rw_config(:pds_attributes, value, {:id => "id", :email => "email", :firstname => "name", :lastname => "name" })
       end
       alias_method :pds_attributes=, :pds_attributes
 
@@ -127,20 +126,27 @@ module Authpds
       end
       alias_method :redirect_logout_url=, :redirect_logout_url
 
-      # Custom url to redirect to in case of system outage
-      def login_inaccessible_url(value = nil)
-        rw_config(:login_inaccessible_url, value, "")
+      # PDS user method to call to identify record
+      def pds_record_identifier(value = nil)
+        rw_config(:pds_record_identifier, value, :id)
       end
-      alias_method :redirect_logout_url=, :redirect_logout_url
+      alias_method :pds_record_identifier=, :pds_record_identifier
     end 
     
     module AuthpdsCallbackMethods
+      # Hook for more complicated logic to determine PDS user record identifier
       def pds_record_identifier
+        self.class.pds_record_identifier
       end
       
       # Hook to determine if we should set up an SSO session
       def valid_sso_session?
         return false
+      end
+      
+      # Hook to provide additional authorization requirements
+      def additional_authorization
+        return true
       end
 
       # Hook to add additional user attributes.
@@ -214,28 +220,25 @@ module Authpds
 
       def authorized?
         # Set all the information that is needed to make an authorization decision
-        set_record(pds_record_identifier) and return authorize
+        set_record and return authorize
       end
 
       def authorize
         # If PDS user is not nil (PDS session already established), authorize
-        !pds_user.nil?
+        !pds_user.nil? && additional_authorization
       end
       
       # Get the record associated with this PDS user.
-      def get_record(pds_record_identifier)
+      def get_record(username)
         raise ArgumentError.new("Argument Error in #{self.class}. :pds_record_identifier given.") if pds_record_identifier.nil?
-    		record = klass.send(:find_by_username, pds_record_identifier)
-        record = klass.new :username => pds_record_identifier if record.nil?
+    		record = klass.send(:find_by_username, username)
+        record = klass.new :username => username if record.nil?
         return record
       end
 
       # Set the record information associated with this PDS user.
-      def set_record(pds_record_identifier = nil)
-        raise RuntimeError.new("Argument Error in #{self.class}. No :pds_record_identifier found.") if pds_record_identifier.nil? and pds_user.nil? and pds_user.username.nil?
-        pds_record_identifier = pds_user.username if pds_record_identifier.nil?
-        return if pds_user.nil? or pds_user.username.nil?
-        self.attempted_record = get_record(pds_record_identifier)
+      def set_record
+        self.attempted_record = get_record(pds_user.send(pds_record_identifier))
         self.attempted_record.expiration_date = expiration_date
         # Do this part only if user data has expired.
         if self.attempted_record.expired?

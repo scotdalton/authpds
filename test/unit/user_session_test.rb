@@ -103,7 +103,6 @@ class UserSessionTest < ActiveSupport::TestCase
   
   test "expiration_date" do
     user_session = UserSession.new
-    puts 1.day.ago.to_f, user_session.expiration_date.to_f
     assert_in_delta(-0.00001, 1.day.ago.to_f, user_session.expiration_date.to_f)
   end
   
