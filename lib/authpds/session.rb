@@ -187,7 +187,7 @@ module Authpds
       
       # URL to redirect to in the case of establishing a SSO session.
       def sso_url(params=nil)
-        return "#{self.class.pds_url}pds?func=sso&institute=#{institution_attributes["link_code"]}&calling_system=#{self.class.calling_system}&url=#{CGI::escape(validate_url(params))}"
+        return "#{self.class.pds_url}/pds?func=sso&institute=#{institution_attributes["link_code"]}&calling_system=#{self.class.calling_system}&url=#{CGI::escape(validate_url(params))}"
       end
 
       def pds_user
