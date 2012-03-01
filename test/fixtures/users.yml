@@ -33,6 +33,7 @@ ba36:
 #     :aleph_permissions => {} }.to_yaml.inspect  %>
 
 st75:
+  id: 3
   password_salt: <%= salt = Authlogic::Random.hex_token %>
   crypted_password: <%= Authlogic::CryptoProviders::Sha512.encrypt("st75" + salt) %>
   persistence_token: <%= Authlogic::Random.hex_token %>

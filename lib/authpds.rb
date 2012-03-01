@@ -6,7 +6,8 @@ AUTHPDS_PATH = File.dirname(__FILE__) + "/authpds/"
   'session',
   'institution',
   'institution_list',
-  'exlibris/pds'
+  'exlibris/pds',
+  'controllers/authpds_controller'
 ].each do |library|
   require AUTHPDS_PATH + library
 end

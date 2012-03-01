@@ -6,6 +6,7 @@ class UserSession < Authlogic::Session::Base
   remember_me_for 300
   httponly true
   secure true
+  login_inaccessible_url "http://library.nyu.edu/errors/bobcat-library-nyu-edu/"
   pds_attributes :username => "id", :id => "id", :uid => "uid", 
     :opensso => "opensso", :name => "name", :firstname => "givenname", 
     :lastname => "sn", :commonname => "cn", :email => "email",
@@ -15,4 +16,8 @@ class UserSession < Authlogic::Session::Base
     :dept_name => "dept_name", :dept_code => "dept_code",
     :major_code => "major_code", :major => "major", :ill_permission => "ill-permission", 
     :newschool_ldap => "newschool_ldap"
+  
+  def expiration_date
+    1.day.ago
+  end
 end

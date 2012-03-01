@@ -1,6 +1,6 @@
 module Authpds
-  module ControllerHelpers
-    module UserSessions
+  module Controllers
+    module AuthpdsUserSessionsController
 
     	# GET /user_sessions/new
     	# GET /login

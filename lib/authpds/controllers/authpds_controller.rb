@@ -1,11 +1,9 @@
 module Authpds
-  module ControllerHelpers
-    module Authpds
+  module Controllers
+    module AuthpdsController
 
       def self.included(klass)
         klass.class_eval do
-          include AuthpdsConfigurable
-          AuthpdsConfigurable.set_default_configuration!(klass.authpds_config)
           include InstanceMethods
           helper_method :current_user_session, :current_user, :current_primary_institution
         end
@@ -24,22 +22,22 @@ module Authpds
         end
 
         # Determine current primary institution based on:
+        #   0. institutions are not being used (returns nil)
         #   1. institution query string parameter in URL
         #   2. institution associated with the client IP
         #   3. primary institution for the current user
-        #   4. "default_institution" defined in AppConfig
-        #   5. first default institution
+        #   4. first default institution
         def current_primary_institution
             @current_primary_institution ||= 
-              (params["institution"].nil? or InstitutionList.instance.get(params["institution"]).nil?) ?
-                (primary_institution_from_ip.nil?) ?
-                  (current_user.nil? or current_user.primary_institution.nil?) ?
-                    (AppConfig.param("default_institution").nil?) ?
+              (InstitutionList.institutions_defined?) ?
+                (params["institution"].nil? or InstitutionList.instance.get(params["institution"]).nil?) ?
+                  (primary_institution_from_ip.nil?) ?
+                    (current_user.nil? or current_user.primary_institution.nil?) ?
                       InstitutionList.instance.default_institutions.first :
-                        InstitutionList.instance.get(AppConfig.param("default_institution")) : 
-                          current_user.primary_institution :
-                            primary_institution_from_ip :
-                              InstitutionList.instance.get(params["institution"])
+                        current_user.primary_institution :
+                          primary_institution_from_ip :
+                            InstitutionList.instance.get(params["institution"]) :
+                              nil
         end
 
         # Grab the first institution that matches the client IP
@@ -51,8 +49,8 @@ module Authpds
         #   1. primary institution's resolve_layout
         #   2. default - views/layouts/application
         def institution_layout
-          (current_primary_institution.nil? or current_primary_institution.resolve_layout.nil?) ? 
-            :application : current_primary_institution.resolve_layout
+          (current_primary_institution.nil? or current_primary_institution.application_layout.nil?) ? 
+            :application : current_primary_institution.application_layout
         end
 
         # Override to add institution.

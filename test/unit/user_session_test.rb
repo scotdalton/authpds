@@ -11,24 +11,24 @@ class UserSessionTest < ActiveSupport::TestCase
     user_session = UserSession.new
     assert_equal(
       "https://logindev.library.nyu.edu/pds?func=load-login&institute=&calling_system=authpds&url=http%3A%2F%2Frailsapp.library.nyu.edu%2Fvalidate%3Freturn_url%3D", 
-        user_session.send(:login_url))
+        user_session.login_url)
   end
   
   test "logout_url" do
     user_session = UserSession.new
     assert_equal(
       "https://logindev.library.nyu.edu/pds?func=logout&url=https%253A%252F%252Flogindev.library.nyu.edu%252Flogout", 
-        user_session.send(:logout_url))
+        user_session.logout_url)
   end
   
   test "validate_url" do
     user_session = UserSession.new
     assert_equal(
       "http://railsapp.library.nyu.edu/validate?return_url=http://railsapp.library.nyu.edu", 
-        user_session.validate_url(:return_url => "http://railsapp.library.nyu.edu"))
+        user_session.send(:validate_url, :return_url => "http://railsapp.library.nyu.edu"))
     assert_equal(
       "http://railsapp.library.nyu.edu/validate?return_url=http://railsapp.library.nyu.edu&authpds_custom_param1=custom_param1", 
-        user_session.validate_url(:controller => "test_controller", 
+        user_session.send(:validate_url, :controller => "test_controller", 
           :action => "test_action", :return_url => "http://railsapp.library.nyu.edu",
             :custom_param1 => "custom_param1"))
   end
@@ -56,6 +56,7 @@ class UserSessionTest < ActiveSupport::TestCase
     assert_equal("GA", pds_user.college_code)
     assert_equal("CSCI", pds_user.dept_code)
     assert_equal("Information Systems", pds_user.major)
+    assert_equal("NYU", pds_user.institute)
   end
   
   test "persist_session" do
@@ -98,5 +99,27 @@ class UserSessionTest < ActiveSupport::TestCase
     assert_not_nil(user_session.record)
     assert_equal(controller.session["authpds_credentials"], user_session.record.persistence_token)
     assert_equal("N12162279", user_session.record.username)
+  end
+  
+  test "expiration_date" do
+    user_session = UserSession.new
+    puts 1.day.ago.to_f, user_session.expiration_date.to_f
+    assert_in_delta(-0.00001, 1.day.ago.to_f, user_session.expiration_date.to_f)
+  end
+  
+  test "get_record" do
+    user_session = UserSession.new
+    record = user_session.send(:get_record, "std5")
+    assert_instance_of(User, record)
+    assert_equal("std5", record.username)
+    assert_nil(record.id)
+    assert_nil(record.firstname)
+    record = user_session.send(:get_record, "st75")
+    assert_instance_of(User, record)
+    assert_equal("st75", record.username)
+    assert_not_nil(record.id)
+    assert_equal(3, record.id)
+    assert_not_nil(record.firstname)
+    assert_equal("Sydney Leigh", record.firstname)
   end
 end

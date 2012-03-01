@@ -30,7 +30,7 @@ module Authpds
         primary_institution = primary_institution.name if primary_institution.is_a?(Institution)
         raise ArgumentError.new(
           "Institution #{primary_institution} does not exist.\n" + 
-          "Please maker sure institutions.yml is configured correctly.") if InstitutionList.instance.get(primary_institution).nil?
+          "Please maker sure the institutions yaml file is configured correctly.") if InstitutionList.instance.get(primary_institution).nil?
         self.user_attributes=({:primary_institution => primary_institution})
       end
 
@@ -55,11 +55,6 @@ module Authpds
         write_attribute(:user_attributes, new_attributes) and return unless new_attributes.kind_of?(Hash)
         # Set new/updated attributes
         write_attribute(:user_attributes, (user_attributes || {}).merge(new_attributes))
-      end
-
-      # Defaults to 1.week.ago
-      def expiration_date
-        @expiration_date ||= 1.week.ago
       end
 
       # Returns a boolean based on whether the User has been refreshed recently.  

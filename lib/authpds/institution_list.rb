@@ -1,5 +1,6 @@
 class InstitutionList
   include Singleton # get the instance with InstitutionList.instance
+  @@institutions_yaml_path = nil
 
   def initialize
     @institutions = nil

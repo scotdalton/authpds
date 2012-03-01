@@ -79,8 +79,9 @@ module Authpds
     def self.included(klass)
       klass.class_eval do
         extend Config
+        include AuthpdsCallbackMethods
         include InstanceMethods
-        include CallbackMethods
+        include AuthlogicCallbackMethods
         persist :persist_session
         validate :after_login
         before_destroy :before_logout
@@ -89,50 +90,78 @@ module Authpds
     end
     
     module Config
+      # Base pds url
       def pds_url(value = nil)
         rw_config(:pds_url, value)
       end
       alias_method :pds_url=, :pds_url
 
+      # Name of the system
       def calling_system(value = nil)
         rw_config(:calling_system, value, "authpds")
       end
       alias_method :calling_system=, :calling_system
 
-      def default_institution(value = nil)
-        rw_config(:default_institution, value)
-      end
-      alias_method :default_institution=, :default_institution
-
+      # Does the system allow anonymous access?
       def anonymous(value = nil)
         rw_config(:anonymous, value, true)
       end
       alias_method :anonymous=, :anonymous
 
+      # Mapping of PDS attributes
       def pds_attributes(value = nil)
         raise ArgumentError.new("Argument Error in #{self.class}. :pds_attributes do not include :username.") if value[:username].nil? unless value.nil?
         rw_config(:pds_attributes, value, {:username => "id", :id => "id", :name => "name"})
       end
       alias_method :pds_attributes=, :pds_attributes
 
+      # Custom redirect logout url
       def redirect_logout_url(value = nil)
         rw_config(:redirect_logout_url, value, "")
       end
       alias_method :redirect_logout_url=, :redirect_logout_url
 
-      def expiration_date(value = nil)
-        raise ArgumentError.new("Argument Error in #{self.class}. :expiration_date not a Proc.") unless value.is_a?(Proc) or value.nil?
-        rw_config(:expiration_date, value, lambda{ 1.week.ago })
+      # Custom url to redirect to in case of system outage
+      def login_inaccessible_url(value = nil)
+        rw_config(:login_inaccessible_url, value, "")
       end
-      alias_method :expiration_date=, :expiration_date
+      alias_method :redirect_logout_url=, :redirect_logout_url
+
+      # Custom url to redirect to in case of system outage
+      def login_inaccessible_url(value = nil)
+        rw_config(:login_inaccessible_url, value, "")
+      end
+      alias_method :redirect_logout_url=, :redirect_logout_url
+    end 
+    
+    module AuthpdsCallbackMethods
+      def pds_record_identifier
+      end
       
-      def cookie_key
-        "#{calling_system}_credentials"
+      # Hook to determine if we should set up an SSO session
+      def valid_sso_session?
+        return false
       end
-    end  
+
+      # Hook to add additional user attributes.
+      def additional_attributes
+        {}
+      end
+      
+      # Hook to update expiration date if necessary
+      def expiration_date
+        1.week.ago
+      end
+    end 
     
     module InstanceMethods
       require "cgi"
+
+      def self.included(klass)
+        klass.class_eval do
+          cookie_key "#{calling_system}_credentials"
+        end
+      end
 
       # Called by the user session controller login is initiated.
       # Precedes :login_url
@@ -150,23 +179,14 @@ module Authpds
         return "#{self.class.pds_url}/pds?func=logout&url=#{CGI::escape(CGI::escape(self.class.redirect_logout_url))}"
       end
       
-    	# Returns the URL for validating a UserSession on return from a remote login system.
-    	# Overriding is not recommended.
-    	def validate_url(params={})
-    		url = controller.url_for(:controller => '/', :action => :validate, :return_url => controller.user_session_redirect_url(params[:return_url]))
-        return url if params.nil? or params.empty?
-        url << "?" if url.match('\?').nil?
-        params.each do |key, value|
-          next if [:controller, :action, :return_url].include?(key)
-          url << "&#{self.class.calling_system}_#{key}=#{value}"
-        end
-        return url
-    	end
+      # URL to redirect to in the case of establishing a SSO session.
+      def sso_url(params=nil)
+        return "#{self.class.pds_url}pds?func=sso&institute=#{institution_attributes["link_code"]}&calling_system=#{self.class.calling_system}&url=#{CGI::escape(validate_url(params))}"
+      end
 
       def pds_user
         begin
           @pds_user ||= Authpds::Exlibris::Pds::BorInfo.new(self.class.pds_url, self.class.calling_system, pds_handle, pds_attributes) unless pds_handle.nil?
-          puts @pds_user.error
           return @pds_user unless @pds_user.nil? or @pds_user.error
         rescue Exception => e
           # Delete the PDS_HANDLE, since this isn't working.
@@ -175,12 +195,8 @@ module Authpds
           return nil
         end
       end
-
+      
       private
-      def valid_sso_user?
-        return false
-      end
-
       def authenticated?
         authenticate
       end
@@ -198,17 +214,29 @@ module Authpds
 
       def authorized?
         # Set all the information that is needed to make an authorization decision
-        set_user_info and return authorize
+        set_record(pds_record_identifier) and return authorize
       end
 
-      def set_user_info
+      def authorize
+        # If PDS user is not nil (PDS session already established), authorize
+        !pds_user.nil?
+      end
+      
+      # Get the record associated with this PDS user.
+      def get_record(pds_record_identifier)
+        raise ArgumentError.new("Argument Error in #{self.class}. :pds_record_identifier given.") if pds_record_identifier.nil?
+    		record = klass.send(:find_by_username, pds_record_identifier)
+        record = klass.new :username => pds_record_identifier if record.nil?
+        return record
+      end
+
+      # Set the record information associated with this PDS user.
+      def set_record(pds_record_identifier = nil)
+        raise RuntimeError.new("Argument Error in #{self.class}. No :pds_record_identifier found.") if pds_record_identifier.nil? and pds_user.nil? and pds_user.username.nil?
+        pds_record_identifier = pds_user.username if pds_record_identifier.nil?
         return if pds_user.nil? or pds_user.username.nil?
-    		# First attempt to find the user
-    		username = pds_user.username
-    		self.attempted_record = klass.send(:find_by_username, username) unless username.nil?
-    		# Then create a new user if we can't find her.
-        self.attempted_record = klass.new :username=>username if self.attempted_record.nil?
-        self.attempted_record.expiration_date = self.class.expiration_date.call
+        self.attempted_record = get_record(pds_record_identifier)
+        self.attempted_record.expiration_date = expiration_date
         # Do this part only if user data has expired.
         if self.attempted_record.expired?
           pds_attributes.each { |user_attr, pds_attr|
@@ -218,8 +246,21 @@ module Authpds
             self.attempted_record.user_attributes = {
               user_attr.to_sym => pds_user.send(user_attr.to_sym) }}
         end
+        self.attempted_record.user_attributes= additional_attributes
       end
       
+    	# Returns the URL for validating a UserSession on return from a remote login system.
+    	def validate_url(params={})
+    		url = controller.url_for(:controller => '/', :action => :validate, :return_url => controller.user_session_redirect_url(params[:return_url]))
+        return url if params.nil? or params.empty?
+        url << "?" if url.match('\?').nil?
+        params.each do |key, value|
+          next if [:controller, :action, :return_url].include?(key)
+          url << "&#{self.class.calling_system}_#{key}=#{value}"
+        end
+        return url
+    	end
+
       def institution_attributes
         @institution_attributes = 
           (controller.current_primary_institution.nil? or controller.current_primary_institution.login_attributes.nil?) ?
@@ -230,20 +271,11 @@ module Authpds
         @pds_attributes ||= self.class.pds_attributes
       end
 
-      def authorize
-        # If PDS user is not nil (PDS session already established), authorize
-        !pds_user.nil?
-      end
-      
       def session_id
         @session_id ||=
           (controller.session.respond_to?(:session_id)) ?
             (controller.session.session_id) ?
               controller.session.session_id : controller.session[:session_id] : controller.session[:session_id]
-      end
-
-      def sso_url(params=nil)
-        return "#{self.class.pds_url}pds?func=sso&institute=#{institution_attributes["link_code"]}&calling_system=#{self.class.calling_system}&url=#{CGI::escape(validate_url(params))}"
       end
 
       def anonymous?
@@ -263,17 +295,16 @@ module Authpds
           :path => "/" } if anonymous?
         # If anonymous access isn't allowed, we can't rightfully set the cookie.
         # We probably should send to a system down page.
-        # controller.redirect_to(login_inaccessible_url)
+        controller.redirect_to(self.class.login_inaccessible_url)
         alert_the_authorities error
       end
 
-      # TODO: Implement to send mail.
       def alert_the_authorities(error)
         controller.logger.error("Error in #{self.class}. Something is amiss with PDS authentication. #{error.message}")
       end
     end
 
-    module CallbackMethods
+    module AuthlogicCallbackMethods
       private
       # Callback method from Authlogic.
       # Called while trying to persist the session.

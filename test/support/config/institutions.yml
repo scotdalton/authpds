@@ -1,0 +1,63 @@
+NYU:
+  login_attributes:
+    link_code: NYSID
+    logout_url: 'http://bobcat.library.nyu.edu/nysid'
+  default_institution: true
+  display_name: NYU Libraries
+  view_attributes:
+    test_view_attribute1: test_attribute1_nyu
+    test_view_attribute2: test_attribute2_nyu
+  ip_addresses:
+    - 128.122.0.0-128.122.149.239
+    - 172.26.*.*
+    - 172.27.*.*
+    - 172.22.88.*
+    - 216.165.*.*
+    - 128.238.*.*
+    
+NYUAD:
+  default_institution: false
+  display_name: NYUAD Library
+  view_attributes:
+    test_view_attribute1: test_attribute1_nyuad
+    test_view_attribute2: test_attribute2_nyuad
+  ip_addresses:
+    - 128.122.0.1
+
+NYSID:
+  login_attributes:
+    link_code: NYSID
+    logout_url: 'http://bobcat.library.nyu.edu/nysid'
+  default_institution: false
+  display_name: New York School of Interior Design Library
+  view_attributes:
+    test_view_attribute1: test_attribute1_nysid
+    test_view_attribute2: test_attribute2_nysid
+  ip_addresses:
+    - 128.122.0.1
+
+CU:
+  login_attributes:
+    link_code: CU
+    logout_url: 'http://bobcat.library.nyu.edu/cooper'
+  display_name: Cooper Union Library
+  view_attributes:
+    test_view_attribute1: test_attribute1_cu
+    test_view_attribute2: test_attribute2_cu
+  ip_addresses:
+    - 199.98.16.0-199.98.31.255 
+
+NS:
+  login_attributes:
+    link_code: NS
+    logout_url: 'http://bobcat.library.nyu.edu/newschool'
+  display_name: New School Libraries
+  view_attributes:
+    test_view_attribute1: test_attribute1_ns
+    test_view_attribute2: test_attribute2_ns
+  ip_addresses:
+    - 128.122.138.0/24
+    - 69.64.210.46
+    - 69.64.210.50
+    - 69.64.210.42
+    - 69.193.198.126
