@@ -7,7 +7,7 @@ class UserSession < Authlogic::Session::Base
   httponly true
   secure true
   login_inaccessible_url "http://library.nyu.edu/errors/bobcat-library-nyu-edu/"
-  pds_attributes :username => "id", :id => "id", :uid => "uid", 
+  pds_attributes :id => "id", :uid => "uid", 
     :opensso => "opensso", :name => "name", :firstname => "givenname", 
     :lastname => "sn", :commonname => "cn", :email => "email",
     :nyuidn => "nyuidn", :verification => "verification", :institute => "institute",

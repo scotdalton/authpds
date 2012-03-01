@@ -42,7 +42,6 @@ class UserSessionTest < ActiveSupport::TestCase
     user_session = UserSession.new
     pds_user = user_session.pds_user
     assert_instance_of(Authpds::Exlibris::Pds::BorInfo, pds_user)
-    assert_equal("N12162279", pds_user.username)
     assert_equal("N12162279", pds_user.id)
     assert_equal("std5", pds_user.uid)
     assert_equal("N12162279", pds_user.nyuidn)
