@@ -213,7 +213,7 @@ module Authpds
         return true unless pds_user.nil?
         # Establish a PDS session if the user logged in via an alternative SSO mechanism and this isn't being called after login
         controller.redirect_to sso_url({
-          :return_url => controller.request.url }) if valid_sso_user? unless controller.params["action"] =="validate" or controller.performed?
+          :return_url => controller.request.url }) if valid_sso_session? unless controller.params["action"] =="validate" or controller.performed?
         # Otherwise, do not authenticate
         return false
       end
