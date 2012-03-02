@@ -53,8 +53,8 @@ class InstitutionList
         institution_hash["name"] = institution_name
         # Merge with parent institution
         institution_hash = 
-        institution_list[institution_hash["parent_institution"]].
-          merge(institution_hash) unless institution_hash["parent_institution"].nil?
+          institution_list[institution_hash["parent_institution"]].
+            merge(institution_hash) unless institution_hash["parent_institution"].nil?
         @institutions[institution_name] = Institution.new(institution_hash)
       end
     end

@@ -2,3 +2,28 @@
 
 This project provides a mechanism for authenticating via Ex Libris' Patron Directory Services (PDS) and provides hooks for making authorization decisions based on the user information provided by PDS.  It leverages the authlogic gem and depends on a User-like model.
 
+
+Generate User-like model:
+rails generate model User username:string email:string firstname:string \
+	lastname:string mobile_phone:string crypted_password:string password_salt:string \
+	session_id:string persistence_token:string login_count:string last_request_at:string \
+	current_login_at:string last_login_at:string last_login_ip:string current_login_ip:string \
+	user_attributes:text refreshed_at:datetime
+
+Generate UserSession model
+rails generate authlogic:session user_session
+
+Create UserSessions controller
+rails generate controller UserSessions --no-assets --no-helper
+
+Mixin authpds methods into UserSessionsController
+class UserSessionsController < ApplicationController
+  include Authpds::Controllers::AuthpdsUserSessionsController
+end
+
+Mixin authpds methods into ApplicationController
+class ApplicationController < ActionController::Base
+  protect_from_forgery
+  require 'authpds'
+  include Authpds::Controllers::AuthpdsController
+end

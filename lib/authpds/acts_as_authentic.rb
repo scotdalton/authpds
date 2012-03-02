@@ -28,9 +28,6 @@ module Authpds
 
       def primary_institution=(primary_institution)
         primary_institution = primary_institution.name if primary_institution.is_a?(Institution)
-        raise ArgumentError.new(
-          "Institution #{primary_institution} does not exist.\n" + 
-          "Please maker sure the institutions yaml file is configured correctly.") if InstitutionList.instance.get(primary_institution).nil?
         self.user_attributes=({:primary_institution => primary_institution})
       end
 

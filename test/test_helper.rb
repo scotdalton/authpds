@@ -41,7 +41,7 @@ require File.dirname(__FILE__) + '/../lib/authpds' unless defined?(Authpds)
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
 
 class ActiveSupport::TestCase
-  VALID_PDS_HANDLE_FOR_NYU = '132012112947113134742310506860'
+  VALID_PDS_HANDLE_FOR_NYU = '232012135435113217012644778009'
   VALID_PDS_HANDLE_FOR_NEWSCHOOL = '272201212284614806184193096120278'
   VALID_PDS_HANDLE_FOR_COOPER = '272201212284614806184193096120278'
   INVALID_PDS_HANDLE = "Invalid"
@@ -72,7 +72,16 @@ class Authlogic::TestCase::MockController
   def performed?
     false
   end
+
+  def request
+    @request ||= Authlogic::TestCase::MockRequest.new(self)
+  end
+  
+  def env
+    @env ||= {'REMOTE_ADDR' => "128.122.149.239"}
+  end
 end
 
-
-
+class UserSessionsController < Authlogic::TestCase::MockController
+  include Authpds::Controllers::AuthpdsUserSessionsController
+end

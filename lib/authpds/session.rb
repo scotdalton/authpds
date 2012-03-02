@@ -131,6 +131,12 @@ module Authpds
         rw_config(:pds_record_identifier, value, :id)
       end
       alias_method :pds_record_identifier=, :pds_record_identifier
+
+      # PDS user method to call to get users primary institution
+      def pds_record_primary_institution(value = nil)
+        rw_config(:pds_record_primary_institution, value, :institute)
+      end
+      alias_method :pds_record_primary_institution=, :pds_record_primary_institution
     end 
     
     module AuthpdsCallbackMethods
@@ -138,7 +144,12 @@ module Authpds
       def pds_record_identifier
         self.class.pds_record_identifier
       end
-      
+
+      # Hook for more complicated logic to determine PDS user primary institution
+      def pds_record_primary_institution
+        self.class.pds_record_primary_institution
+      end
+
       # Hook to determine if we should set up an SSO session
       def valid_sso_session?
         return false
@@ -242,6 +253,7 @@ module Authpds
         self.attempted_record.expiration_date = expiration_date
         # Do this part only if user data has expired.
         if self.attempted_record.expired?
+          self.attempted_record.primary_institution= pds_user.send(pds_record_primary_institution)
           pds_attributes.each { |user_attr, pds_attr|
             self.attempted_record.send("#{user_attr}=".to_sym, pds_user.send(pds_attr.to_sym)) if user.respond_to?("#{user_attr}=".to_sym) }
           # Set default pds user attributes
