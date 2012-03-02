@@ -21,6 +21,13 @@ class UserSessionTest < ActiveSupport::TestCase
         user_session.logout_url)
   end
   
+  test "sso_url" do
+    user_session = UserSession.new
+    assert_equal(
+    "https://logindev.library.nyu.edu/pds?func=sso&institute=&calling_system=authpds&url=http%3A%2F%2Frailsapp.library.nyu.edu%2Fvalidate%3Freturn_url%3D", 
+        user_session.sso_url)
+  end
+  
   test "validate_url" do
     user_session = UserSession.new
     assert_equal(
