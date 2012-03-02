@@ -2,4 +2,3 @@
 
 This project provides a mechanism for authenticating via Ex Libris' Patron Directory Services (PDS) and provides hooks for making authorization decisions based on the user information provided by PDS.  It leverages the authlogic gem and depends on a User-like model.
 
-For con
