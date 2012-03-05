@@ -66,7 +66,7 @@ module Authpds
         end
         
         def institution_param_key
-          @institution_param_key ||= UserSession.insitution_param
+          @institution_param_key ||= UserSession.institution_param_key
         end
       end
     end
