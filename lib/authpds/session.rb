@@ -261,7 +261,7 @@ module Authpds
           self.attempted_record.primary_institution= pds_user.send(pds_record_primary_institution)
           pds_attributes.each_key { |user_attr|
             self.attempted_record.send("#{user_attr}=".to_sym, 
-              pds_user.send(user_attr.to_sym)) if self.attempted_record.respond_to?("#{user_attr}=".to_sym) }
+              pds_user.send(user_attr.to_sym)) if self.attempted_record.respond_to?("#{user_attr}=".to_sym)
             self.attempted_record.user_attributes = {
               user_attr.to_sym => pds_user.send(user_attr.to_sym) }}
         end

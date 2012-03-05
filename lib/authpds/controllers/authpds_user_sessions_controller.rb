@@ -15,11 +15,11 @@ module Authpds
     	def validate
     		@user_session = UserSession.new(params[:user_session])
     		@user_session.save do |result|
-    			@user_session.errors.each_full {|error|
+    			@user_session.errors.each {|error|
     				flash[:error] = "There was an error logging in. #{error}"
     				logger.error("Error in #{self.class} while saving user session. #{error}")
     			} unless result
-    	    	redirect_to (params[:return_url].nil?) ? root_url : params[:return_url]
+    	    redirect_to (params[:return_url].nil?) ? root_url : params[:return_url]
     		end
     	end
 
