@@ -259,10 +259,9 @@ module Authpds
         # Do this part only if user data has expired.
         if self.attempted_record.expired?
           self.attempted_record.primary_institution= pds_user.send(pds_record_primary_institution)
-          pds_attributes.each { |user_attr, pds_attr|
-            self.attempted_record.send("#{user_attr}=".to_sym, pds_user.send(pds_attr.to_sym)) if user.respond_to?("#{user_attr}=".to_sym) }
-          # Set default pds user attributes
           pds_attributes.each_key { |user_attr|
+            self.attempted_record.send("#{user_attr}=".to_sym, 
+              pds_user.send(user_attr.to_sym)) if self.attempted_record.respond_to?("#{user_attr}=".to_sym) }
             self.attempted_record.user_attributes = {
               user_attr.to_sym => pds_user.send(user_attr.to_sym) }}
         end
