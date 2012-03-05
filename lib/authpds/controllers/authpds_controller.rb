@@ -30,13 +30,13 @@ module Authpds
         def current_primary_institution
             @current_primary_institution ||= 
               (InstitutionList.institutions_defined?) ?
-                (params["institution"].nil? or InstitutionList.instance.get(params["institution"]).nil?) ?
+                (params["#{institution_param_key}"].nil? or InstitutionList.instance.get(params["#{institution_param_key}"]).nil?) ?
                   (primary_institution_from_ip.nil?) ?
                     (current_user.nil? or current_user.primary_institution.nil?) ?
                       InstitutionList.instance.default_institutions.first :
                         current_user.primary_institution :
                           primary_institution_from_ip :
-                            InstitutionList.instance.get(params["institution"]) :
+                            InstitutionList.instance.get(params["#{institution_param_key}"]) :
                               nil
         end
 
@@ -55,12 +55,18 @@ module Authpds
 
         # Override to add institution.
         def url_for(options={})
-          options["institution"] = params["institution"] unless params["institution"].nil? or options["institution"]
+          options["#{institution_param_key}"] = 
+            params["#{institution_param_key}"] unless params["#{institution_param_key}"].nil? or 
+              options["#{institution_param_key}"]
           super(options)          
         end
 
         def user_session_redirect_url(url)
           (url.nil?) ? (request.referer.nil?) ? root_url : request.referer : url
+        end
+        
+        def institution_param_key
+          @institution_param_key ||= UserSession.insitution_param
         end
       end
     end

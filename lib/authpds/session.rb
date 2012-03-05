@@ -137,6 +137,12 @@ module Authpds
         rw_config(:pds_record_primary_institution, value, :institute)
       end
       alias_method :pds_record_primary_institution=, :pds_record_primary_institution
+
+      # Querystring parameter key for the institution value
+      def institution_param_key(value = nil)
+        rw_config(:institution_param_key, value, "institute")
+      end
+      alias_method :institution_param_key=, :institution_param_key
     end 
     
     module AuthpdsCallbackMethods
