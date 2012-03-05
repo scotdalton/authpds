@@ -247,7 +247,6 @@ module Authpds
       
       # Get the record associated with this PDS user.
       def get_record(username)
-        raise ArgumentError.new("Argument Error in #{self.class}. :pds_record_identifier given.") if pds_record_identifier.nil?
     		record = klass.send(:find_by_username, username)
         record = klass.new :username => username if record.nil?
         return record
@@ -272,7 +271,7 @@ module Authpds
       
     	# Returns the URL for validating a UserSession on return from a remote login system.
     	def validate_url(params={})
-    		url = controller.url_for(:controller => '/', :action => :validate, :return_url => controller.user_session_redirect_url(params[:return_url]))
+    		url = controller.validate_url(:return_url => controller.user_session_redirect_url(params[:return_url]))
         return url if params.nil? or params.empty?
         url << "?" if url.match('\?').nil?
         params.each do |key, value|
