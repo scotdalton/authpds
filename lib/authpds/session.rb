@@ -321,7 +321,7 @@ module Authpds
       end
 
       def alert_the_authorities(error)
-        controller.logger.error("Error in #{self.class}. Something is amiss with PDS authentication. #{error.message}")
+        controller.logger.error("Error in #{self.class}. Something is amiss with PDS authentication.\n#{error}\n#{error.backtrace.inspect}}")
       end
     end
 
