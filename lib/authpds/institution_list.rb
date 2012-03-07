@@ -22,8 +22,8 @@ class InstitutionList
   end
 
   # Returns an array of Institutions
-  def defautls
-    return institutions.values.find_all {|institution| institution.defautl == true}
+  def defaults
+    return institutions.values.find_all {|institution| institution.default == true}
   end
 
   # Returns an array of Institutions

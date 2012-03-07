@@ -2,7 +2,7 @@ NYU:
   login_attributes:
     link_code: NYU
     logout_url: 'http://bobcat.library.nyu.edu'
-  defautl: false
+  default: false
   display_name: NYU Libraries
   view_attributes:
     test_view_attribute1: test_attribute1_nyu
@@ -16,7 +16,7 @@ NYU:
     - 128.238.*.*
     
 NYUAD:
-  defautl: true
+  default: true
   display_name: NYUAD Library
   view_attributes:
     test_view_attribute1: test_attribute1_nyuad
@@ -28,7 +28,7 @@ NYSID:
   login_attributes:
     link_code: NYSID
     logout_url: 'http://bobcat.library.nyu.edu/nysid'
-  defautl: false
+  default: false
   display_name: New York School of Interior Design Library
   view_attributes:
     test_view_attribute1: test_attribute1_nysid
