@@ -10,7 +10,7 @@ module Authpds
   # further details about the module.
   # 
   # == Methods Available for Overriding
-  # :on_every_request:: Used for creating a UserSession without the User having to explicitly login, thereby supporting single sign-on. 
+  # :persist_session:: Used for creating a UserSession without the User having to explicitly login, thereby supporting single sign-on. 
   #                     When overridden, implementations should update the UserSession User, via UserSession#get_user based
   #                     on custom authentication/authorization criteria.  Authlogic will take care of the rest by saving the User
   #                     and creating the UserSession.
@@ -19,7 +19,7 @@ module Authpds
   # :login_url::  Should return a custom login URL for redirection to when logging in via a remote system.
   #               If undefined, /login will go to the UserSession login view,
   #               default user_session/new).  Preceded by :before_login.
-  # :after_login::  Used for creating a UserSession after login credentials are provided.  When overridden, 
+  # :validate_session::  Used for creating a UserSession after login credentials are provided.  When overridden, 
   #                 custom implementations should update the UserSession User, via UserSession#get_user based 
   #                 on authentication/authorization criteria.  Authlogic will take care of the rest
   #                 by saving the User and creating the UserSession.
@@ -53,12 +53,12 @@ module Authpds
   # === Persisting a UserSession in AuthLogic
   # When persisting a UserSession, Authlogic attempts to create the UserSession based on information available 
   # without having to perform an actual login by calling the :persisting? method. Authologic provides several callbacks from the :persisting?
-  # method, e.g. :before_persisting, :persist, :after_persisting.  We're using the :persist callback and setting it to :on_every_request.
+  # method, e.g. :before_persisting, :persist, :after_persisting.  We're using the :persist callback and setting it to :persist_session.
   # 
   # === Validating a UserSession in AuthLogic
   # When validating a UserSession, Authlogic attempts to create the UserSession based on information available 
   # from login by calling the :valid? method. Authologic provides several callbacks from the :valid?
-  # method, e.g. :before_validation, :validate, :after_validation.  We're using the :validate callback and setting it to :after_login.
+  # method, e.g. :before_validation, :validate, :after_validation.  We're using the :validate callback and setting it to :validate_session.
   #
   # === Access to the controller in UserSession
   # The class that UserSession extends, Authologic::Session::Base, has an explicit handle to the current controller via the instance method 
@@ -83,7 +83,7 @@ module Authpds
         include InstanceMethods
         include AuthlogicCallbackMethods
         persist :persist_session
-        validate :after_login
+        validate :validate_session
         before_destroy :before_logout
         after_destroy :after_logout
       end
@@ -143,6 +143,12 @@ module Authpds
         rw_config(:institution_param_key, value, "institute")
       end
       alias_method :institution_param_key=, :institution_param_key
+
+      # URL name for validation action
+      def validate_url_name(value = nil)
+        rw_config(:validate_url_name, value, "validate_url")
+      end
+      alias_method :validate_url_name=, :validate_url_name
     end 
     
     module AuthpdsCallbackMethods
@@ -270,7 +276,7 @@ module Authpds
       
     	# Returns the URL for validating a UserSession on return from a remote login system.
     	def validate_url(params={})
-    		url = controller.validate_url(:return_url => controller.user_session_redirect_url(params[:return_url]))
+    		url = controller.send(validate_url_name, :return_url => controller.user_session_redirect_url(params[:return_url]))
         return url if params.nil? or params.empty?
         url << "?" if url.match('\?').nil?
         params.each do |key, value|
@@ -279,6 +285,10 @@ module Authpds
         end
         return url
     	end
+    	
+      def validate_url_name
+        @validate_url_name ||= self.class.validate_url_name
+      end
 
       def institution_attributes
         @institution_attributes = 
@@ -333,7 +343,7 @@ module Authpds
       
       # Callback method from Authlogic.
       # Called while validating on session save.
-      def after_login
+      def validate_session
         authenticated? and authorized?
       end
 

@@ -78,13 +78,13 @@ class UserSessionTest < ActiveSupport::TestCase
     assert_equal("N12162279", user_session.send(:attempted_record).username)
   end
   
-  test "after_login" do
+  test "validate_session" do
     user_session = UserSession.new
     assert_nil(controller.session["auth_test_credentials"])
     assert_nil(user_session.send(:attempted_record))
     assert_nil(user_session.record)
     assert_no_difference('User.count') {
-        user_session.send(:after_login)
+        user_session.send(:validate_session)
     }
     assert_nil(controller.session["auth_test_credentials"])
     assert_not_nil(user_session.send(:attempted_record))

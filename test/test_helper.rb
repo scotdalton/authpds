@@ -41,7 +41,7 @@ require File.dirname(__FILE__) + '/../lib/authpds' unless defined?(Authpds)
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
 
 class ActiveSupport::TestCase
-  VALID_PDS_HANDLE_FOR_NYU = '5320129121113834981331135143'
+  VALID_PDS_HANDLE_FOR_NYU = '73201295126115517644686139782'
   VALID_PDS_HANDLE_FOR_NEWSCHOOL = '272201212284614806184193096120278'
   VALID_PDS_HANDLE_FOR_COOPER = '272201212284614806184193096120278'
   INVALID_PDS_HANDLE = "Invalid"
@@ -67,6 +67,10 @@ class Authlogic::TestCase::MockController
   end
   
   def root_url
+  end
+
+  def validate_url(options={})
+    return "http://railsapp.library.nyu.edu/validate?return_url=#{options[:return_url]}"
   end
 
   def performed?
