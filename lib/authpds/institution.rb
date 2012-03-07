@@ -1,4 +1,4 @@
-class Institution < Struct.new(:display_name, :name, :default_institution, 
+class Institution < Struct.new(:display_name, :name, :default, 
   :application_layout, :ip_addresses, :parent_institution, :view_attributes, :login_attributes)
   require 'ipaddr'
 
@@ -7,7 +7,10 @@ class Institution < Struct.new(:display_name, :name, :default_institution,
   # not actual Services!
   def initialize(h={})
     members.each {|m| self.send( ("#{m}=").to_sym , (h.delete("#{m}".to_sym) || h.delete("#{m}"))) }
-    default_institution = false unless default_institution
+    # If the institution is named default, take that as an
+    # indication that it's the default institution
+    default = true if name.eql?("default") or name.eql?("DEFAULT")
+    default = false unless default
     # Log the fact that there are left overs in the hash
     # Rails.logger.warn("The following institution settings were ignored: #{h.inspect}.") unless h.empty?
   end
