@@ -33,7 +33,7 @@ module Authpds
                 (params["#{institution_param_key}"].nil? or InstitutionList.instance.get(params["#{institution_param_key}"]).nil?) ?
                   (primary_institution_from_ip.nil?) ?
                     (current_user.nil? or current_user.primary_institution.nil?) ?
-                      InstitutionList.instance.default_institutions.first :
+                      InstitutionList.instance.defautls.first :
                         current_user.primary_institution :
                           primary_institution_from_ip :
                             InstitutionList.instance.get(params["#{institution_param_key}"]) :
