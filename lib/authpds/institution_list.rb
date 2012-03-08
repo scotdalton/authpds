@@ -23,7 +23,7 @@ class InstitutionList
 
   # Returns an array of Institutions
   def defaults
-    return institutions.values.find_all {|institution| institution.default == true}
+    return institutions.values.find_all {|institution| institution.default === true}
   end
 
   # Returns an array of Institutions
@@ -46,19 +46,30 @@ class InstitutionList
         "The file #{@@institutions_yaml_path} does not exist. "+
         "In order to use the institution feature you must create the file."
       ) unless File.exists?(@@institutions_yaml_path)
-      institution_list = YAML.load_file( @@institutions_yaml_path )
+      institutions_hash = YAML.load_file( @@institutions_yaml_path )
+      institutions_with_parents = {}
+      # Prepare institution definitions
+      institutions_hash.each do |name, definition|
+        definition["name"] = name
+        definition["default"] = false unless definition.key?("default")
+        institutions_with_parents[name] = definition if definition.key?("parent_institution")
+      end
+      # Handle inheritance for institutions
+      institutions_with_parents.each do |name, definition|
+        institutions_hash[name] =  merge_with_parent(institutions_hash, definition)
+      end
+      # Turn the institution definitions to Institutions
       @institutions = {}
-      # Turn the institution hashes to Institutions
-      institution_list.each_pair do |institution_name, institution_hash|
-        institution_hash["name"] = institution_name
-        institution_hash["default"] = false if institution_hash["default"].nil?
-        # Merge with parent institution
-        institution_hash = 
-          institution_list[institution_hash["parent_institution"]].
-            merge(institution_hash) unless institution_hash["parent_institution"].nil?
-        @institutions[institution_name] = Institution.new(institution_hash)
+      institutions_hash.each do |name, definition|
+        @institutions[name] = Institution.new(definition)
       end
     end
     return @institutions
+  end
+  
+  private 
+  def merge_with_parent(institutions, child)
+    parent = institutions[child["parent_institution"]]
+    return (parent["parent_institution"].nil?) ? parent.merge(child) : merge_with_parent(institutions, parent).merge(child)
   end
 end

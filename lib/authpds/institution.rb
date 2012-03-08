@@ -1,5 +1,5 @@
 class Institution < Struct.new(:display_name, :name, :default,
-  :application_layout, :ip_addresses, :parent_institution, :view_attributes, :login_attributes)
+  :layouts, :ip_addresses, :parent_institution, :view_attributes, :login_attributes)
   require 'ipaddr'
 
   # Better initializer than Struct gives us, take a hash instead

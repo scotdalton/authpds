@@ -6,6 +6,7 @@ class InstitutionListTest < ActiveSupport::TestCase
     InstitutionList.class_variable_set(:@@institutions_yaml_path, nil)
     InstitutionList.instance.instance_variable_set(:@institutions, nil)
     @yaml_path = "#{File.dirname(__FILE__)}/../support/config/institutions.yml"
+    @yaml2_path = "#{File.dirname(__FILE__)}/../support/config/institutions2.yml"
   end
   
   test "yaml_path" do
@@ -49,5 +50,14 @@ class InstitutionListTest < ActiveSupport::TestCase
     end
     assert_not_nil(InstitutionList.instance.institutions_with_ip "128.122.149.122")
     assert_equal([InstitutionList.instance.get("NYU")], InstitutionList.instance.institutions_with_ip("128.122.149.122"))
+  end
+  
+  test "parents" do
+    institution_list = YAML.load_file( @yaml2_path )
+    # nyu = institution_list["NYU"]
+    # puts "Test:#{institution_list}"
+    InstitutionList.yaml_path= @yaml2_path
+    InstitutionList.instance.institutions
+    
   end
 end
