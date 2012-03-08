@@ -1,10 +1,10 @@
 PATH
   remote: .
   specs:
-    authpds (0.0.1)
+    authpds (0.0.18)
       authlogic
       nokogiri
-      rails (~> 3.2.1)
+      rails (~> 3.2.0)
 
 GEM
   remote: http://rubygems.org/

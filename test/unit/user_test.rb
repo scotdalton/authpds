@@ -41,13 +41,12 @@ class UserSessionTest < ActiveSupport::TestCase
   
   test "primary_institution" do
     user = User.new
-    assert_raise ArgumentError do
-      user.primary_institution= "NYU"
-    end
-    InstitutionList.yaml_path= "#{File.dirname(__FILE__)}/../support/config/institutions.yml"
     assert_nothing_raised ArgumentError do
       user.primary_institution= "NYU"
     end
+    assert_equal(nil, user.primary_institution)
+    InstitutionList.yaml_path= "#{File.dirname(__FILE__)}/../support/config/institutions.yml"
+    assert_equal(InstitutionList.instance.get("NYU"), user.primary_institution)
   end
   
   test "institutions" do

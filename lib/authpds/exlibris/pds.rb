@@ -42,16 +42,23 @@ module Authpds
       class BorInfo < GetAttribute
 
         protected
-        def initialize(pds_url, calling_system, pds_handle, bor_info_attributes)
+        def initialize(pds_url, calling_system, pds_handle)
           super(pds_url, calling_system, pds_handle, "bor_info")
           raise RuntimeError.new( 
             "Error in #{self.class}."+
             "Unrecognized response: #{@response}.") unless @response.root.name.eql?("bor-info") or @response.root.name.eql?("pds")
-          bor_info_attributes.each { |local_attribute, xml_attribute|
-            self.class.send(:attr_reader, local_attribute)
-            instance_variable_set("@#{local_attribute}".to_sym, 
-              @response.at("#{xml_attribute}").inner_text) unless @response.at("//bor-info/#{xml_attribute}").nil?
+          return unless @response.root.name.eql?("bor-info")
+          bor_info = @response.root.children.each { |xml_element|
+            pds_attr = xml_element.name.gsub("-", "_")
+            self.class.send(:attr_reader, pds_attr)
+            instance_variable_set("@#{pds_attr}".to_sym, xml_element.inner_text) unless xml_element.inner_text.nil?
           }
+          # bor_info_attributes.each_value { |xml_element|
+          #   pds_attr = xml_element.gsub("-", "_")
+          #   self.class.send(:attr_reader, pds_attr)
+          #   instance_variable_set("@#{pds_attr}".to_sym, 
+          #     @response.at("#{xml_element}").inner_text) unless @response.at("//bor-info/#{xml_element}").nil?
+          # }
         end
       end
     end

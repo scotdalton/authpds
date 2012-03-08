@@ -3,7 +3,7 @@ require 'test_helper'
 class PdsTest < ActiveSupport::TestCase
   
   def setup
-    @pds_url = "https://login.library.nyu.edu"
+    @pds_url = "https://logindev.library.nyu.edu"
     @calling_system = "authpds"
     @valid_pds_handle_for_nyu = VALID_PDS_HANDLE_FOR_NYU
     @valid_pds_handle_for_newschool = VALID_PDS_HANDLE_FOR_NEWSCHOOL
@@ -37,8 +37,8 @@ class PdsTest < ActiveSupport::TestCase
     assert_equal("Error User does not exist", get_attribute.error)
   end
   
-  test "bor_info_valid" do
-    nyu = Authpds::Exlibris::Pds::BorInfo.new(@pds_url, @calling_system, @valid_pds_handle_for_nyu, @bor_info_attributes)
+  test "bor_info_valid_nyu" do
+    nyu = Authpds::Exlibris::Pds::BorInfo.new(@pds_url, @calling_system, @valid_pds_handle_for_nyu)
     assert_equal("N12162279", nyu.id)
     assert_equal("std5", nyu.uid)
     assert_equal("N12162279", nyu.nyuidn)
@@ -46,13 +46,16 @@ class PdsTest < ActiveSupport::TestCase
     assert_equal("CB", nyu.bor_type)
     assert_equal("true", nyu.opensso)
     assert_equal("Scot Thomas", nyu.name)
-    assert_equal("Scot Thomas", nyu.firstname)
-    assert_equal("Dalton", nyu.lastname)
+    assert_equal("Scot Thomas", nyu.givenname)
+    assert_equal("Dalton", nyu.sn)
     assert_equal("Y", nyu.ill_permission)
     assert_equal("GA", nyu.college_code)
     assert_equal("CSCI", nyu.dept_code)
     assert_equal("Information Systems", nyu.major)
-    newschool = Authpds::Exlibris::Pds::BorInfo.new(@pds_url, @calling_system, @valid_pds_handle_for_newschool, @bor_info_attributes)
+  end
+
+  test "bor_info_valid_newschool" do
+    newschool = Authpds::Exlibris::Pds::BorInfo.new(@pds_url, @calling_system, @valid_pds_handle_for_newschool)
     assert_equal("N00206454", newschool.id)
     assert_equal("314519567249252", newschool.uid)
     assert_equal("N00206454", newschool.nyuidn)
@@ -60,13 +63,13 @@ class PdsTest < ActiveSupport::TestCase
     assert_equal("0", newschool.bor_type)
     assert_equal("true", newschool.newschool_ldap)
     assert_equal("Allen", newschool.name)
-    assert_equal("Allen", newschool.firstname)
-    assert_equal("Jones", newschool.lastname)
+    assert_equal("Allen", newschool.givenname)
+    assert_equal("Jones", newschool.sn)
     assert_equal("Y", newschool.ill_permission)
   end
   
   test "bor_info_invalid" do
-    get_attribute = Authpds::Exlibris::Pds::BorInfo.new(@pds_url, @calling_system, @invalid_pds_handle, @bor_info_attributes)
+    get_attribute = Authpds::Exlibris::Pds::BorInfo.new(@pds_url, @calling_system, @invalid_pds_handle)
     assert_equal("Error User does not exist", get_attribute.error)
   end
 end

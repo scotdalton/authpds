@@ -51,6 +51,7 @@ class InstitutionList
       # Turn the institution hashes to Institutions
       institution_list.each_pair do |institution_name, institution_hash|
         institution_hash["name"] = institution_name
+        institution_hash["default"] = false if institution_hash["default"].nil?
         # Merge with parent institution
         institution_hash = 
           institution_list[institution_hash["parent_institution"]].

@@ -110,7 +110,8 @@ module Authpds
 
       # Mapping of PDS attributes
       def pds_attributes(value = nil)
-        rw_config(:pds_attributes, value, {:id => "id", :email => "email", :firstname => "name", :lastname => "name" })
+        value.each_value { |pds_attr| pds_attr.gsub!("-", "_") } unless value.nil?
+        rw_config(:pds_attributes, value, {:email => "email", :firstname => "name", :lastname => "name", :primary_institution => "institute" })
       end
       alias_method :pds_attributes=, :pds_attributes
 
@@ -132,12 +133,6 @@ module Authpds
       end
       alias_method :pds_record_identifier=, :pds_record_identifier
 
-      # PDS user method to call to get users primary institution
-      def pds_record_primary_institution(value = nil)
-        rw_config(:pds_record_primary_institution, value, :institute)
-      end
-      alias_method :pds_record_primary_institution=, :pds_record_primary_institution
-
       # Querystring parameter key for the institution value
       def institution_param_key(value = nil)
         rw_config(:institution_param_key, value, "institute")
@@ -154,12 +149,7 @@ module Authpds
     module AuthpdsCallbackMethods
       # Hook for more complicated logic to determine PDS user record identifier
       def pds_record_identifier
-        self.class.pds_record_identifier
-      end
-
-      # Hook for more complicated logic to determine PDS user primary institution
-      def pds_record_primary_institution
-        self.class.pds_record_primary_institution
+        @pds_record_identifier ||= self.class.pds_record_identifier
       end
 
       # Hook to determine if we should set up an SSO session
@@ -215,7 +205,7 @@ module Authpds
 
       def pds_user
         begin
-          @pds_user ||= Authpds::Exlibris::Pds::BorInfo.new(self.class.pds_url, self.class.calling_system, pds_handle, pds_attributes) unless pds_handle.nil?
+          @pds_user ||= Authpds::Exlibris::Pds::BorInfo.new(self.class.pds_url, self.class.calling_system, pds_handle) unless pds_handle.nil?
           return @pds_user unless @pds_user.nil? or @pds_user.error
         rescue Exception => e
           # Delete the PDS_HANDLE, since this isn't working.
@@ -252,9 +242,9 @@ module Authpds
       end
       
       # Get the record associated with this PDS user.
-      def get_record(username)
-    		record = klass.send(:find_by_username, username)
-        record = klass.new :username => username if record.nil?
+      def get_record(login)
+    		record = klass.find_by_smart_case_login_field(login)
+        record = klass.new login_field => login if record.nil?
         return record
       end
 
@@ -264,12 +254,14 @@ module Authpds
         self.attempted_record.expiration_date = expiration_date
         # Do this part only if user data has expired.
         if self.attempted_record.expired?
-          self.attempted_record.primary_institution= pds_user.send(pds_record_primary_institution)
-          pds_attributes.each_key { |user_attr|
-            self.attempted_record.send("#{user_attr}=".to_sym, 
-              pds_user.send(user_attr.to_sym)) if self.attempted_record.respond_to?("#{user_attr}=".to_sym)
+          pds_attributes.each do |record_attr, pds_attr|
+            self.attempted_record.send("#{record_attr}=".to_sym, 
+              pds_user.send(pds_attr.to_sym)) if self.attempted_record.respond_to?("#{record_attr}=".to_sym)
+          end
+          pds_user.class.public_instance_methods(false).each do |pds_attr_reader|
             self.attempted_record.user_attributes = {
-              user_attr.to_sym => pds_user.send(user_attr.to_sym) }}
+              pds_attr_reader.to_sym => pds_user.send(pds_attr_reader.to_sym) }
+          end
         end
         self.attempted_record.user_attributes= additional_attributes
       end
