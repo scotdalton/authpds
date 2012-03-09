@@ -19,8 +19,7 @@ module Authpds
   # :validate_url_name:: URL name for validation action in routes
   # 
   # == Hooks Available for Overriding
-  # :pds_record_identifier:: Allows for more complex logic in determining what should be used as the record identifier.
-  # Defaults to what was set in the pds_record_identifier config.
+  # :pds_record_identifier:: Allows for more complex logic in determining what should be used as the record identifier. Defaults to what was set in the pds_record_identifier config.
   # :valid_sso_session?:: If there is no PDS handle, can we redirect to PDS to establish a SSO session based on some other information?
   # :additional_authorization:: Allows for additions to the authorization decision
   # :additional_attributes:: Allows for additional attributes to be stored in the record

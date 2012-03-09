@@ -49,8 +49,7 @@ and further details about the module.
 :validate_url_name:: URL name for validation action in routes
 
 == Hooks Available for Overriding
-:pds_record_identifier:: Allows for more complex logic in determining what should be used as the record identifier.
-Defaults to what was set in the pds_record_identifier config.
+:pds_record_identifier:: Allows for more complex logic in determining what should be used as the record identifier. Defaults to what was set in the pds_record_identifier config.
 :valid_sso_session?:: If there is no PDS handle, can we redirect to PDS to establish a SSO session based on some other information?
 :additional_authorization:: Allows for additions to the authorization decision
 :additional_attributes:: Allows for additional attributes to be stored in the record
@@ -66,9 +65,3 @@ method, e.g. :before_persisting, :persist, :after_persisting.  We're using the :
 The class that Session extends, Authologic::Session::Base, has an explicit handle to the current controller via the instance method 
 :controller.  This gives our custom instance methods access to cookies, session information, loggers, etc. and also allows them to 
 perform redirects and renders.
-
-=== :before_login vs. :login_url
-:before_login allows for customized processing before the SessionController invokes a redirect or render to a /login page.  It is
-is fully generic and can be used for any custom purposes.  :login_url is specific for the case of logging in from a remote sytem.  The
-two methods can be used in conjuction, but any redirects or renders performed in :before_login, will supercede a redirect to :login_url.
-
