@@ -90,5 +90,5 @@ class Authlogic::TestCase::MockController
 end
 
 class UserSessionsController < Authlogic::TestCase::MockController
-  include Authpds::Controllers::AuthpdsUserSessionsController
+  include Authpds::Controllers::AuthpdsSessionsController
 end
