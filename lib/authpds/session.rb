@@ -1,80 +1,46 @@
 module Authpds
   # == Overview
-  # The Auth module mixes in callbacks to Authlogic::Session::Base for persisting, 
-  # validating and managing the destruction of sessions.  The module also provides
-  # instance methods used by the SessionController for managing UserSessions before 
-  # login and redirecting to login and logout urls.
-  # The methods in this module are intended to be overridden for custom authentication/authorization
-  # needs.  The documentation below describes the methods available for overriding, convenience methods
-  # available for use by custom implementations, instructions for mixing in custom implementations and
-  # further details about the module.
+  # The Authpds gem mixes in callbacks to Authlogic for persisting
+  # sessions based on a valid PDS handle.  
+  # The module extends Authlogic and should be compatible with Authlogic configuation.
+  # It also provides hooks for custom functionality.
+  # The documentation below describes the hooks available for overriding, PDS config methods
+  # and further details about the module.
   # 
-  # == Methods Available for Overriding
-  # :persist_session:: Used for creating a UserSession without the User having to explicitly login, thereby supporting single sign-on. 
-  #                     When overridden, implementations should update the UserSession User, via UserSession#get_user based
-  #                     on custom authentication/authorization criteria.  Authlogic will take care of the rest by saving the User
-  #                     and creating the UserSession.
-  # :before_login:: Allows for custom logic immediately before a login is initiated.  If a controller :redirect_to or :render 
-  #                 is performed, the directive will supercede :login_url. Precedes :login_url.
-  # :login_url::  Should return a custom login URL for redirection to when logging in via a remote system.
-  #               If undefined, /login will go to the UserSession login view,
-  #               default user_session/new).  Preceded by :before_login.
-  # :validate_session::  Used for creating a UserSession after login credentials are provided.  When overridden, 
-  #                 custom implementations should update the UserSession User, via UserSession#get_user based 
-  #                 on authentication/authorization criteria.  Authlogic will take care of the rest
-  #                 by saving the User and creating the UserSession.
-  # :before_logout:: Allows for custom logic immediately before logout is performed
-  # :after_logout:: Allows for custom logic immediately after logout is performed
-  # :redirect_logout_url:: Should return a custom logout URL for redirection to after logout has been performed.  
-  #               Allows for single sign-out via a remote system.
-  #
-  # == Convenience Methods for Use by Custom Implementations
-  # UserSession#controller::  Returns the current controller.  Used for accessing cookies and session information,
-  #                           performing redirects, etc.
-  # UserSession#get_user::  Returns the User for updating by :on_every_request and :after_login.  Returns an existing User
-  #                         if she exists, otherwise creates a new User.
-  # UserSession#validate_url:: Returns the URL for validating a UserSession on return from a remote login system.
-  # User#expiration_period=:: Sets the expiration date for the User. Default is one week ago.
-  # User#refreshed_at=:: Sets the last time the User was refreshed and saves the value to the database.
-  # User#expired?:: Returns a boolean based on whether the User has been refreshed recently.  
-  #                 If User#refreshed_at is older than User#expiration_date, the User is expired and the data
-  #                 may need to be refreshed.
-  # User#user_attributes=:: "Smart" updating of user_attributes.  Maintains user_attributes that are not explicity overwritten.
+  # == Config Options Available
+  # :pds_url:: Base pds url
+  # :calling_system:: Name of the system
+  # :anonymous:: Does the system allow anonymous access?
+  # :pds_attributes:: Mapping of PDS attributes to record attributes
+  # :redirect_logout_url:: Custom redirect logout url
+  # :login_inaccessible_url:: Custom url to redirect to in case of system outage
+  # :pds_record_identifier:: PDS user method to call to identify record
+  # :institution_param_key:: Querystring parameter key for the institution value in this system
+  # :validate_url_name:: URL name for validation action in routes
   # 
-  # == Mixing in Custom Implementations
-  # Once you've built your class, you can mix it in to Authlogic with the following config setting in config/environment.rb
-  #       config.app_config.login = { 
-  #         :module => :PDS,
-  #         :cookie_name => "user_credentials_is_the_default"
-  #         :remember_me => true|false
-  #         :remember_me_for => seconds, e.g. 5.minutes }
+  # == Hooks Available for Overriding
+  # :pds_record_identifier:: Allows for more complex logic in determining what should be used as the record identifier.
+  # Defaults to what was set in the pds_record_identifier config.
+  # :valid_sso_session?:: If there is no PDS handle, can we redirect to PDS to establish a SSO session based on some other information?
+  # :additional_authorization:: Allows for additions to the authorization decision
+  # :additional_attributes:: Allows for additional attributes to be stored in the record
+  # :expiration_date:: Indicates when the record information should be refreshed.  Defaults to one week ago.
   #
   # == Further Implementation Details 
-  # === Persisting a UserSession in AuthLogic
-  # When persisting a UserSession, Authlogic attempts to create the UserSession based on information available 
+  # === Persisting a Session in AuthLogic
+  # When persisting a Session, Authlogic attempts to create the Session based on information available 
   # without having to perform an actual login by calling the :persisting? method. Authologic provides several callbacks from the :persisting?
   # method, e.g. :before_persisting, :persist, :after_persisting.  We're using the :persist callback and setting it to :persist_session.
   # 
-  # === Validating a UserSession in AuthLogic
-  # When validating a UserSession, Authlogic attempts to create the UserSession based on information available 
-  # from login by calling the :valid? method. Authologic provides several callbacks from the :valid?
-  # method, e.g. :before_validation, :validate, :after_validation.  We're using the :validate callback and setting it to :validate_session.
-  #
-  # === Access to the controller in UserSession
-  # The class that UserSession extends, Authologic::Session::Base, has an explicit handle to the current controller via the instance method 
-  # :controller.  This gives our custom instance methods the access to cookies, session information, loggers, etc. and also allows them to 
+  # === Access to the controller in Session
+  # The class that Session extends, Authologic::Session::Base, has an explicit handle to the current controller via the instance method 
+  # :controller.  This gives our custom instance methods access to cookies, session information, loggers, etc. and also allows them to 
   # perform redirects and renders.
   #
   # === :before_login vs. :login_url
-  # :before_login allows for customized processing before the UserSessionController invokes a redirect or render to a /login page.  It is
+  # :before_login allows for customized processing before the SessionController invokes a redirect or render to a /login page.  It is
   # is fully generic and can be used for any custom purposes.  :login_url is specific for the case of logging in from a remote sytem.  The
   # two methods can be used in conjuction, but any redirects or renders performed in :before_login, will supercede a redirect to :login_url.
-  #
-  # === UserSession#get_user vs. UserSession#attempted_record
-  # Both UserSession#get_user and UserSession#attempted_record provide access to the instance variable @attempted_record, but 
-  # UserSession#get_user set the instance variable to either an existing User (based on the username parameter), or creates a new User
-  # for use by implementing systems.  If custom implementations want to interact directly with UserSession#attempted_record and 
-  # @attempted_record, they are welcome to do so.
   module Session
     def self.included(klass)
       klass.class_eval do
@@ -83,9 +49,6 @@ module Authpds
         include InstanceMethods
         include AuthlogicCallbackMethods
         persist :persist_session
-        validate :validate_session
-        before_destroy :before_logout
-        after_destroy :after_logout
       end
     end
     
@@ -180,11 +143,6 @@ module Authpds
         klass.class_eval do
           cookie_key "#{calling_system}_credentials"
         end
-      end
-
-      # Called by the user session controller login is initiated.
-      # Precedes :login_url
-      def before_login(params={})
       end
 
       # URL to redirect to for login.
@@ -331,22 +289,6 @@ module Authpds
       # Called while trying to persist the session.
       def persist_session
         destroy unless (authenticated? and authorized?) or anonymous?
-      end
-      
-      # Callback method from Authlogic.
-      # Called while validating on session save.
-      def validate_session
-        authenticated? and authorized?
-      end
-
-      # Callback method from Authlogic.
-      # Called before destroying UserSession.
-      def before_logout
-      end
-
-      # Callback method from Authlogic.
-      # Called after destroying UserSession.
-      def after_logout
       end
     end
   end
