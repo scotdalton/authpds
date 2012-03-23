@@ -1,3 +1,3 @@
 module Authpds
-  VERSION = "0.0.20"
+  VERSION = "0.0.22"
 end

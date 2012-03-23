@@ -20,5 +20,5 @@ Gem::Specification.new do |s|
   s.add_dependency "authlogic" # used for auth logic :)
   s.add_dependency "nokogiri" # used for xml parsing
 
-  # s.add_development_dependency "sqlite3"
+  s.add_development_dependency "sqlite3"
 end
