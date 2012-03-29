@@ -12,9 +12,9 @@ default:
   layouts: 
     resolve: layouts/nyu/resolve
     search: layouts/nyu/search
-  login_attributes:
+  login:
     link_code: NYU
-  view_attributes:
+  views:
     tabs_partial: search/nyu/tabs
     tip1_partial: search/nyu/tip1
     tip2_partial: search/nyu/tip2
@@ -250,7 +250,7 @@ NYUAD:
   parent_institution: NYU 
   resolve_layout: layouts/nyuad/resolve
   search_layout: layouts/nyuad/search
-  view_attributes:
+  views:
     tabs_partial: search/nyuad/tabs
     tip1_partial: search/nyuad/tip1
     tip2_partial: search/nyu/tip2
@@ -286,9 +286,9 @@ CU:
   display_name: The Cooper Union Library
   resolve_layout: layouts/cu/resolve
   search_layout: layouts/cu/search
-  login_attributes:
+  login:
     link_code: CU
-  view_attributes:
+  views:
     tabs_partial: search/cu/tabs
     sfx_base_url: http://sfx.library.nyu.edu/sfxcooper?
   ip_addresses:
@@ -312,9 +312,9 @@ NS:
   display_name: New School Libraries
   resolve_layout: layouts/cu/resolve
   search_layout: layouts/cu/search
-  login_attributes:
+  login:
     link_code: NS
-  view_attributes:
+  views:
     tabs_partial: search/ns/tabs
     sfx_base_url: http://sfx4.library.newschool.edu/ns?
   ip_addresses:
@@ -343,7 +343,7 @@ NS:
         COMMENTS_ABOUT_BOBCAT_LCL: help
 
 NYSID:
-  login_attributes:
+  login:
     link_code: NYSID
   resolve_layout: layouts/nysid/resolve
   search_layout: layouts/nysid/search

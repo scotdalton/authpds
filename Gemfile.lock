@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    authpds (0.0.20)
+    authpds (0.0.22)
       authlogic
       nokogiri
       rails (~> 3.2.0)

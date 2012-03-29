@@ -152,7 +152,7 @@ module Authpds
 
       # URL to redirect to after logout.
       def logout_url(params={})
-        return "#{self.class.pds_url}/pds?func=logout&url=#{CGI::escape(CGI::escape(self.class.redirect_logout_url))}"
+        return "#{self.class.pds_url}/pds?func=logout&url=#{CGI::escape(controller.user_session_redirect_url(self.class.redirect_logout_url))}"
       end
       
       # URL to redirect to in the case of establishing a SSO session.
@@ -241,8 +241,8 @@ module Authpds
 
       def institution_attributes
         @institution_attributes = 
-          (controller.current_primary_institution.nil? or controller.current_primary_institution.login_attributes.nil?) ?
-            {} : controller.current_primary_institution.login_attributes
+          (controller.current_primary_institution.nil? or controller.current_primary_institution.login.nil?) ?
+            {} : controller.current_primary_institution.login
       end
       
       def pds_attributes

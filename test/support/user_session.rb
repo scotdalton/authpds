@@ -1,6 +1,6 @@
 class UserSession < Authlogic::Session::Base
   pds_url "https://logindev.library.nyu.edu"
-  redirect_logout_url "https://logindev.library.nyu.edu/logout"
+  redirect_logout_url "http://bobcatdev.library.nyu.edu"
   calling_system "authpds"
   remember_me true
   remember_me_for 300

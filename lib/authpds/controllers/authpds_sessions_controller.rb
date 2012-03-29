@@ -20,7 +20,7 @@ module Authpds
     	# GET /logout
     	def destroy
     		user_session = UserSession.find
-    		logout_url = user_session.logout_url(params)
+    		logout_url = user_session.logout_url(params) unless user_session.nil?
     		user_session.destroy unless user_session.nil?
     		redirect_to user_session_redirect_url(logout_url)
     	end

@@ -17,7 +17,7 @@ class UserSessionTest < ActiveSupport::TestCase
   test "logout_url" do
     user_session = UserSession.new
     assert_equal(
-      "https://logindev.library.nyu.edu/pds?func=logout&url=https%253A%252F%252Flogindev.library.nyu.edu%252Flogout", 
+      "https://logindev.library.nyu.edu/pds?func=logout&url=http%3A%2F%2Fbobcatdev.library.nyu.edu", 
         user_session.logout_url)
   end
   

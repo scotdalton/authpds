@@ -26,9 +26,9 @@ class PdsTest < ActiveSupport::TestCase
     assert_equal("N12162279", get_attribute.response.at("//id").inner_text)
     get_attribute = Authpds::Exlibris::Pds::GetAttribute.new(@pds_url, @calling_system, @valid_pds_handle_for_nyu, "bor_verification")
     assert_equal("N12162279", get_attribute.response.at("//id").inner_text)
-    get_attribute = Authpds::Exlibris::Pds::GetAttribute.new(@pds_url, @calling_system, @valid_pds_handle_for_nyu, "authenticate")
-    assert_equal("N12162279", get_attribute.response.at("//id").inner_text)
     get_attribute = Authpds::Exlibris::Pds::GetAttribute.new(@pds_url, @calling_system, @valid_pds_handle_for_nyu, "bor_id")
+    assert_equal("N12162279", get_attribute.response.at("//id").inner_text)
+    get_attribute = Authpds::Exlibris::Pds::GetAttribute.new(@pds_url, @calling_system, @valid_pds_handle_for_nyu, "authenticate")
     assert_equal("N12162279", get_attribute.response.at("//id").inner_text)
   end
   
