@@ -3,31 +3,44 @@
 This gem provides a mechanism for authenticating via Ex Libris' Patron Directory Services (PDS) and provides hooks for making authorization decisions based on the user information provided by PDS.  It leverages the authlogic gem and depends on a User-like model.
 
 == Basics
-=== Generate User-like model:
+=== Generate User-like model
 rails generate model User username:string email:string firstname:string \
 	lastname:string mobile_phone:string crypted_password:string password_salt:string \
 	session_id:string persistence_token:string login_count:integer last_request_at:string \
 	current_login_at:string last_login_at:string last_login_ip:string current_login_ip:string \
 	user_attributes:text refreshed_at:datetime
+	
+=== Configure User-like model
 
 === Generate UserSession model
-rails generate authlogic:session user_session
+  $ rails generate authlogic:session user_session
+
+=== Configure UserSession with Authpds options
+  class UserSession < Authlogic::Session::Base
+    pds_url "https://login.library.institution.edu"
+    redirect_logout_url "http://library.institution.edu"
+    calling_system "my_system"
+
+    def expiration_date
+      1.second.ago
+    end
+  end
 
 === Create UserSessions controller
-rails generate controller UserSessions --no-assets --no-helper
+  $ rails generate controller UserSessions --no-assets --no-helper
 
 === Mixin authpds methods into UserSessionsController
-class UserSessionsController < ApplicationController
-	require 'authpds'
-  include Authpds::Controllers::AuthpdsSessionsController
-end
+  class UserSessionsController < ApplicationController
+  	require 'authpds'
+    include Authpds::Controllers::AuthpdsSessionsController
+  end
 
 === Mixin authpds methods into ApplicationController
-class ApplicationController < ActionController::Base
-  protect_from_forgery
-  require 'authpds'
-  include Authpds::Controllers::AuthpdsController
-end
+  class ApplicationController < ActionController::Base
+    protect_from_forgery
+    require 'authpds'
+    include Authpds::Controllers::AuthpdsController
+  end
 
 == Overview
 The Authpds gem mixes in callbacks to Authlogic for persisting

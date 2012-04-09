@@ -4,7 +4,7 @@ module Authpds
   # sessions based on a valid PDS handle.  
   # The module extends Authlogic and should be compatible with Authlogic configuation.
   # It also provides hooks for custom functionality.
-  # The documentation below describes the hooks available for overriding, PDS config methods
+  # The documentation below describes the hooks available, PDS config methods
   # and further details about the module.
   # 
   # == Config Options Available
@@ -13,16 +13,16 @@ module Authpds
   # :anonymous:: Does the system allow anonymous access?
   # :pds_attributes:: Mapping of PDS attributes to record attributes
   # :redirect_logout_url:: Custom redirect logout url
-  # :login_inaccessible_url:: Custom url to redirect to in case of system outage
+  # :login_inaccessible_url:: Custom url to redirect to in case of PDS system outage
   # :pds_record_identifier:: PDS user method to call to identify record
   # :institution_param_key:: Querystring parameter key for the institution value in this system
   # :validate_url_name:: URL name for validation action in routes
   # 
-  # == Hooks Available for Overriding
+  # == Hooks Available
   # :pds_record_identifier:: Allows for more complex logic in determining what should be used as the record identifier. Defaults to what was set in the pds_record_identifier config.
   # :valid_sso_session?:: If there is no PDS handle, can we redirect to PDS to establish a SSO session based on some other information?
   # :additional_authorization:: Allows for additions to the authorization decision
-  # :additional_attributes:: Allows for additional attributes to be stored in the record
+  # ::: Allows for additional attributes to be stored in the record
   # :expiration_date:: Indicates when the record information should be refreshed.  Defaults to one week ago.
   #
   # == Further Implementation Details 
