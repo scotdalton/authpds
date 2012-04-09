@@ -9,21 +9,21 @@ module Authpds
   # 
   # == Config Options Available
   # :pds_url:: Base pds url
-  # :calling_system:: Name of the system
-  # :anonymous:: Does the system allow anonymous access?
+  # :calling_system:: Name of the system (authpds)
+  # :anonymous:: Does the system allow anonymous access? (true)
   # :pds_attributes:: Mapping of PDS attributes to record attributes
   # :redirect_logout_url:: Custom redirect logout url
   # :login_inaccessible_url:: Custom url to redirect to in case of PDS system outage
   # :pds_record_identifier:: PDS user method to call to identify record
   # :institution_param_key:: Querystring parameter key for the institution value in this system
-  # :validate_url_name:: URL name for validation action in routes
+  # :validate_url_name:: URL name for validation action in routes (validate_url)
   # 
   # == Hooks Available
-  # :pds_record_identifier:: Allows for more complex logic in determining what should be used as the record identifier. Defaults to what was set in the pds_record_identifier config.
-  # :valid_sso_session?:: If there is no PDS handle, can we redirect to PDS to establish a SSO session based on some other information?
-  # :additional_authorization:: Allows for additions to the authorization decision
-  # ::: Allows for additional attributes to be stored in the record
-  # :expiration_date:: Indicates when the record information should be refreshed.  Defaults to one week ago.
+  # :pds_record_identifier:: Allows for more complex logic in determining what should be used as the record identifier. Defaults to what was set in the pds_record_identifier config.  Returns a Symbol.
+  # :valid_sso_session?:: If there is no PDS handle, can we redirect to PDS to establish a SSO session based on some other information?  Returns a Boolean.
+  # :additional_authorization:: Allows for additions to the authorization decision.  Returns a Boolean.
+  # :additional_attributes:: Allows for additional attributes to be stored in the record.  Returns a Hash.
+  # :expiration_date:: Indicates when the record information should be refreshed.  Defaults to one week ago.  Returns a Date or Time.
   #
   # == Further Implementation Details 
   # === Persisting a Session in AuthLogic
