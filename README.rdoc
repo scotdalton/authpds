@@ -39,6 +39,45 @@ This gem provides a mechanism for authenticating via Ex Libris' Patron Directory
 === Create UserSessions controller
   $ rails generate controller UserSessions --no-assets --no-helper
 
+=== Configure institutions
+
+==== Create institutions.yml file
+
+Calling the institution "default" will make it the default:
+
+  default:
+    login:
+      link_code: INST01
+    display_name: My Institution
+
+An alternative syntax:
+
+  INST01:
+    login:
+      link_code: INST01
+    default: true
+    display_name: My Institution
+
+You can create multiple institution listings as follows:
+
+  INST01:
+    login:
+      link_code: INST01
+    default: true
+    display_name: My Institution
+  INST02:
+    login:
+      link_code: INST01
+    display_name: Your Institution
+
+The two separate institutions above share a link_code in this example. The link_code attribute determines the institute parameter in the PDS url.
+
+==== Create institution initializer
+
+If you have your institutions.yml file in another location make sure to change the line below accordingly.
+
+  InstitutionList.yaml_path= Rails.root + "config/institutions.yml"
+
 === Mixin authpds methods into UserSessionsController
   class UserSessionsController < ApplicationController
     require 'authpds'
