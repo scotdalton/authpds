@@ -43,12 +43,22 @@ This gem provides a mechanism for authenticating via Ex Libris' Patron Directory
 
 ==== Create institutions.yml file
 
+Calling the institution "default" will make it the default:
+
   default:
     login:
-      link_code: DEFAULT
+      link_code: INST01
     display_name: My Institution
 
-You can create multiple institution listings as follows
+An alternative syntax:
+
+  INST01:
+    login:
+      link_code: INST01
+    default: true
+    display_name: My Institution
+
+You can create multiple institution listings as follows:
 
   INST01:
     login:
@@ -60,11 +70,13 @@ You can create multiple institution listings as follows
       link_code: INST01
     display_name: Your Institution
 
+The two separate institutions above share a link_code in this example. The link_code attribute determines the institute parameter in the PDS url.
+
 ==== Create institution initializer
 
-  InstitutionList.yaml_path= Rails.root + "config/institutions.yml"
+If you have your institutions.yml file in another location make sure to change the line below accordingly.
 
-If you have your institutions.yml file in another location make sure to change the line above accordingly.
+  InstitutionList.yaml_path= Rails.root + "config/institutions.yml"
 
 === Mixin authpds methods into UserSessionsController
   class UserSessionsController < ApplicationController
