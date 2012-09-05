@@ -41,9 +41,8 @@ This gem provides a mechanism for authenticating via Ex Libris' Patron Directory
 
 === Configure institutions
 
-==== Create institution config file
+==== Create institutions.yml file
 
-===== config/institutions.yml
   default:
     login:
       link_code: DEFAULT
@@ -51,7 +50,6 @@ This gem provides a mechanism for authenticating via Ex Libris' Patron Directory
 
 You can create multiple institution listings as follows
 
-===== config/institutions.yml
   INST01:
     login:
       link_code: INST01
@@ -64,7 +62,6 @@ You can create multiple institution listings as follows
 
 ==== Create institution initializer
 
-===== config/initializers/institutions.yml
   InstitutionList.yaml_path= Rails.root + "config/institutions.yml"
 
 If you have your institutions.yml file in another location make sure to change the line above accordingly.
