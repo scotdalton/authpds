@@ -39,6 +39,25 @@ This gem provides a mechanism for authenticating via Ex Libris' Patron Directory
 === Create UserSessions controller
   $ rails generate controller UserSessions --no-assets --no-helper
 
+=== Configure institutions
+
+== Create institution config file
+
+=== config/institutions.yml
+  default:
+    login:
+      link_code: DEFAULT
+    display_name: My Institution
+
+You can create multiple institution listings as follows
+
+  DEFAULT:
+    login:
+      link_code: DEFAULT
+    display_name: My Institution
+
+== Create institution initializer
+
 === Mixin authpds methods into UserSessionsController
   class UserSessionsController < ApplicationController
     require 'authpds'
