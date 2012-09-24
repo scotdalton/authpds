@@ -72,6 +72,19 @@ You can create multiple institution listings as follows:
 
 The two separate institutions above share a link_code in this example. The link_code attribute determines the institute parameter in the PDS url.
 
+==== Institution fields
+:name:: Institution name
+:display_name:: Name to display to users.
+:default:: Boolean indicating whether this is a default Institution.  Alternatively, an Institution can be named 'default'.
+:parent_institution:: A parent Institution from which this child will inherit fields.
+:ip_addresses:: IP addresses associated with the Institution.
+:login:: Login configurations associated with the Institution.
+:layouts:: Layout configurations associated with the Institution.
+:views:: View configurations associated with the Institution.
+:controllers:: Controller configurations associated with the Institution.
+:models:: Model configurations associated with the Institution.
+  
+
 ==== Create institution initializer
 
 If you have your institutions.yml file in another location make sure to change the line below accordingly.
