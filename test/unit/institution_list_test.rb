@@ -3,7 +3,7 @@ require 'test_helper'
 class InstitutionListTest < ActiveSupport::TestCase
 
   def setup
-    InstitutionList.class_variable_set(:@@institutions_yaml_path, nil)
+    InstitutionList.send(:class_variable_set, :@@institutions_yaml_path, nil)
     InstitutionList.instance.instance_variable_set(:@institutions, nil)
     @yaml_path = "#{File.dirname(__FILE__)}/../support/config/institutions.yml"
     @yaml2_path = "#{File.dirname(__FILE__)}/../support/config/institutions2.yml"

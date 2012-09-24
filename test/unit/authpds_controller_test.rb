@@ -4,7 +4,7 @@ class ApplicationControllerTest < ActiveSupport::TestCase
   def setup
     activate_authlogic
     controller.session[:session_id] = "FakeSessionID"
-    InstitutionList.class_variable_set(:@@institutions_yaml_path, nil)
+    InstitutionList.send(:class_variable_set, :@@institutions_yaml_path, nil)
     InstitutionList.instance.instance_variable_set(:@institutions, nil)
     controller.instance_variable_set(:@current_primary_institution, nil)
   end

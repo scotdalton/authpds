@@ -5,7 +5,7 @@ class UserSessionTest < ActiveSupport::TestCase
     activate_authlogic
     controller.session[:session_id] = "FakeSessionID"
     controller.cookies[:PDS_HANDLE] = { :value => VALID_PDS_HANDLE_FOR_NYU }
-    InstitutionList.class_variable_set(:@@institutions_yaml_path, nil)
+    InstitutionList.send(:class_variable_set, :@@institutions_yaml_path, nil)
     InstitutionList.instance.instance_variable_set(:@institutions, nil)
   end
 
