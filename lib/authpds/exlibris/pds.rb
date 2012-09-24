@@ -4,6 +4,7 @@ module Authpds
       require 'nokogiri'
       require 'uri'
       require 'net/http'
+      require 'net/https'
 
       # Makes a call to the PDS get-attribute API.
       # Defaults attribute equal to "bor_info".
