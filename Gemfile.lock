@@ -4,22 +4,23 @@ GIT
   specs:
     ipaddr_range_set (0.9.1)
 
-PATH
-  remote: .
-  specs:
-    authpds (0.1.2)
-      authlogic
-      nokogiri
-      rails (~> 3.2.0)
-
-PATH
-  remote: /Users/dalton/Documents/workspace/gems/institutions
+GIT
+  remote: https://github.com/scotdalton/institutions
+  revision: 538cca447f1572d31475c9ba4ffcdb6947db9d41
   specs:
     institutions (0.0.1)
       git
       rake
       rdoc
       require_all
+
+PATH
+  remote: .
+  specs:
+    authpds (0.1.3)
+      authlogic
+      nokogiri
+      rails (~> 3.2.0)
 
 GEM
   remote: http://rubygems.org/

@@ -17,5 +17,5 @@ group :test do
 end
 
 gem "ipaddr_range_set", :git => "https://github.com/jrochkind/ipaddr_range_set"
-# gem 'institutions', :git => "https://github.com/scotdalton/institutions"
-gem 'institutions', :path => "/Users/dalton/Documents/workspace/gems/institutions"
+gem 'institutions', :git => "https://github.com/scotdalton/institutions"
+# gem 'institutions', :path => "/Users/dalton/Documents/workspace/gems/institutions"
