@@ -87,9 +87,12 @@ The two separate institutions above share a link_code in this example. The link_
 
 ==== Create institution initializer
 
-If you have your institutions.yml file in another location make sure to change the line below accordingly.
+Most likely it will just work if you put the config file in 
+  "#{Rails.root}/config/institutions.yml"
 
-  InstitutionList.yaml_path= Rails.root + "config/institutions.yml"
+If you have your institutions config file in another location make sure to change the line below accordingly.
+  Institutions.loadpaths << File.join("other", "path")
+  Institutions.filenames << "other_file.yml"
 
 === Mixin authpds methods into UserSessionsController
   class UserSessionsController < ApplicationController

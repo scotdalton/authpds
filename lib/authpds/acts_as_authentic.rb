@@ -2,6 +2,7 @@ module Authpds
   module ActsAsAuthentic
     def self.included(klass)
       klass.class_eval do
+        require 'institutions'
         add_acts_as_authentic_module(InstanceMethods, :prepend)
       end
     end
@@ -14,7 +15,6 @@ module Authpds
         end
       end
 
-      public
       # Setting the username field also resets the persistence_token if the value changes.
       def username=(value)
         write_attribute(:username, value)
@@ -22,29 +22,26 @@ module Authpds
       end
 
       def primary_institution
-        return nil unless InstitutionList.institutions_defined?
-        InstitutionList.instance.get(user_attributes[:primary_institution]) unless user_attributes.nil?
+        all_institutions[user_attributes[:primary_institution]] unless user_attributes.nil?
       end
 
-      def primary_institution=(primary_institution)
-        primary_institution = primary_institution.name if primary_institution.is_a?(Institution)
-        self.user_attributes=({:primary_institution => primary_institution})
+      def primary_institution=(new_primary_institution)
+        new_primary_institution = new_primary_institution.code if new_primary_institution.is_a?(Institutions::Institution)
+        self.user_attributes=({:primary_institution => new_primary_institution.to_sym})
       end
 
       def institutions
-        return nil unless InstitutionList.institutions_defined?
         user_attributes[:institutions].collect { |institution|
-          InstitutionList.instance.get(institution) } unless user_attributes.nil?
+          all_institutions[institution] } unless user_attributes.nil?
       end
 
-      def institutions=(institutions)
-        raise ArgumentError.new(
-          "Institutions input should be an array.") unless institutions.is_a?(Array)
-        filtered_institutions = institutions.collect { |institution|
-          institution = institution.name if institution.is_a?(Institution)
-          institution unless InstitutionList.instance.get(institution).nil?
+      def institutions=(new_institutions)
+        raise ArgumentError.new("Institutions input should be an array.") unless new_institutions.is_a?(Array)
+        new_institutions.collect! { |institution| institution.to_sym }
+        new_institutions.select! { |institution|
+          all_institutions[ new_institutions.is_a?(Institutions::Institution) ? institution.code : institution.to_sym]
         }
-        self.user_attributes=({:institutions => filtered_institutions})
+        self.user_attributes=({:institutions => new_institutions}) unless new_institutions.empty?
       end
 
       # "Smart" updating of user_attributes.  Maintains user_attributes that are not explicity overwritten.
@@ -54,13 +51,18 @@ module Authpds
         write_attribute(:user_attributes, (user_attributes || {}).merge(new_attributes))
       end
 
-      # Returns a boolean based on whether the User has been refreshed recently.  
+      # Returns a boolean based on whether the User has been refreshed recently.
       # If User#refreshed_at is older than User#expiration_date, the User is expired and the data
       # may need to be refreshed.
       def expired?
         # If the record is older than the expiration date, it is expired.
-        (refreshed_at.nil?) ? true : refreshed_at < expiration_date 
+        (refreshed_at.nil?) ? true : refreshed_at < expiration_date
       end
+
+      def all_institutions
+        Institutions.institutions
+      end
+      private :all_institutions
     end
   end
 end

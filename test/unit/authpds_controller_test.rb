@@ -1,14 +1,14 @@
 require 'test_helper'
 class ApplicationControllerTest < ActiveSupport::TestCase
-  
+
   def setup
     activate_authlogic
     controller.session[:session_id] = "FakeSessionID"
-    InstitutionList.send(:class_variable_set, :@@institutions_yaml_path, nil)
-    InstitutionList.instance.instance_variable_set(:@institutions, nil)
+    Institutions.send(:instance_variable_set, :@loadpaths, nil)
+    Institutions.send(:instance_variable_set, :@institutions, nil)
     controller.instance_variable_set(:@current_primary_institution, nil)
   end
-  
+
   test "current_user_session_nil" do
     assert_nil(controller.current_user_session)
   end
@@ -39,17 +39,16 @@ class ApplicationControllerTest < ActiveSupport::TestCase
   test "current_primary_institution_default" do
     assert_nil(controller.current_primary_institution)
     controller.request[:session_id] = "FakeSessionID"
-    InstitutionList.yaml_path= "#{File.dirname(__FILE__)}/../support/config/institutions.yml"
-    assert_equal(InstitutionList.instance.get("NYUAD"), controller.current_primary_institution)
+    Institutions.loadpaths<< "#{File.dirname(__FILE__)}/../support/config"
+    assert_equal(Institutions.institutions[:NYUAD], controller.current_primary_institution)
   end
-
 
   test "current_primary_institution_user" do
     assert_nil(controller.current_primary_institution)
-    InstitutionList.yaml_path= "#{File.dirname(__FILE__)}/../support/config/institutions.yml"
+    Institutions.loadpaths<< "#{File.dirname(__FILE__)}/../support/config"
     controller.cookies[:PDS_HANDLE] = { :value => VALID_PDS_HANDLE_FOR_NYU }
     assert_equal("N12162279", controller.current_user.username)
-    assert_equal(InstitutionList.instance.get("NYU"), controller.current_user.primary_institution)
-    assert_equal(InstitutionList.instance.get("NYU"), controller.current_primary_institution)
+    assert_equal(Institutions.institutions[:NYU], controller.current_user.primary_institution)
+    assert_equal(Institutions.institutions[:NYU], controller.current_primary_institution)
   end
 end

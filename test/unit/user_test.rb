@@ -1,12 +1,11 @@
 require 'test_helper'
 class UserSessionTest < ActiveSupport::TestCase
-  
   def setup
     activate_authlogic
     controller.session[:session_id] = "FakeSessionID"
     controller.cookies[:PDS_HANDLE] = { :value => VALID_PDS_HANDLE_FOR_NYU }
-    InstitutionList.send(:class_variable_set, :@@institutions_yaml_path, nil)
-    InstitutionList.instance.instance_variable_set(:@institutions, nil)
+    Institutions.send(:instance_variable_set, :@loadpaths, nil)
+    Institutions.send(:instance_variable_set, :@institutions, nil)
   end
 
   test "username=" do
@@ -20,8 +19,6 @@ class UserSessionTest < ActiveSupport::TestCase
     assert_not_equal(token1, token2)
   end
 
-  
-  
   test "user_attributes" do
     user = User.new
     user.user_attributes= {:test_attribute1 => "value1", :test_attribute2 => "value2"}
@@ -38,30 +35,39 @@ class UserSessionTest < ActiveSupport::TestCase
     assert_equal("value3.1", user.user_attributes[:test_attribute3])
     assert_equal("value4.1", user.user_attributes[:test_attribute4])
   end
-  
+
   test "primary_institution" do
+    Institutions.loadpaths<< "#{File.dirname(__FILE__)}/../support/config"
+    user = User.new
+    assert_nothing_raised ArgumentError do
+      user.primary_institution= "NYU"
+    end
+    assert_equal(Institutions.institutions[:NYU], user.primary_institution)
+  end
+
+  test "primary_institution no institutions" do
     user = User.new
     assert_nothing_raised ArgumentError do
       user.primary_institution= "NYU"
     end
     assert_equal(nil, user.primary_institution)
-    InstitutionList.yaml_path= "#{File.dirname(__FILE__)}/../support/config/institutions.yml"
-    assert_equal(InstitutionList.instance.get("NYU"), user.primary_institution)
   end
-  
+
   test "institutions" do
+    Institutions.loadpaths<< "#{File.dirname(__FILE__)}/../support/config"
     user = User.new
     assert_raise ArgumentError do
       user.institutions= "NYU"
     end
-    assert_raise ArgumentError do
-      user.institutions= ["NYU"]
-    end
-    assert_nil(user.institutions)
-    InstitutionList.yaml_path= "#{File.dirname(__FILE__)}/../support/config/institutions.yml"
     user.institutions= ["NYU"]
     assert_not_nil(user.institutions)
-    assert_equal([InstitutionList.instance.get("NYU")], user.institutions)
+    assert_equal([Institutions.institutions[:NYU]], user.institutions)
+  end
+
+  test "institutions not set" do
+    user = User.new
+    user.institutions= ["NYU"]
+    assert_nil(user.institutions)
   end
 
   test "expired?" do

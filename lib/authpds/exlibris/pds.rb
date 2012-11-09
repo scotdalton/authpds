@@ -41,7 +41,6 @@ module Authpds
       # Makes a call get-attribute with attribute "bor_info".
       # Raises an exception if there is an unexpected response.
       class BorInfo < GetAttribute
-
         protected
         def initialize(pds_url, calling_system, pds_handle)
           super(pds_url, calling_system, pds_handle, "bor_info")
@@ -54,12 +53,6 @@ module Authpds
             self.class.send(:attr_reader, pds_attr)
             instance_variable_set("@#{pds_attr}".to_sym, xml_element.inner_text) unless xml_element.inner_text.nil?
           }
-          # bor_info_attributes.each_value { |xml_element|
-          #   pds_attr = xml_element.gsub("-", "_")
-          #   self.class.send(:attr_reader, pds_attr)
-          #   instance_variable_set("@#{pds_attr}".to_sym, 
-          #     @response.at("#{xml_element}").inner_text) unless @response.at("//bor-info/#{xml_element}").nil?
-          # }
         end
       end
     end

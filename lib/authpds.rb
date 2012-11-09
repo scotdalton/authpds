@@ -4,8 +4,6 @@ AUTHPDS_PATH = File.dirname(__FILE__) + "/authpds/"
 [ 
   'acts_as_authentic',
   'session',
-  'institution',
-  'institution_list',
   'exlibris/pds',
   'controllers/authpds_controller',
   'controllers/authpds_sessions_controller'

@@ -1,12 +1,12 @@
 module Authpds
   # == Overview
   # The Authpds gem mixes in callbacks to Authlogic for persisting
-  # sessions based on a valid PDS handle.  
+  # sessions based on a valid PDS handle.
   # The module extends Authlogic and should be compatible with Authlogic configuation.
   # It also provides hooks for custom functionality.
   # The documentation below describes the hooks available, PDS config methods
   # and further details about the module.
-  # 
+  #
   # == Config Options Available
   # :pds_url:: Base pds url
   # :calling_system:: Name of the system (authpds)
@@ -17,7 +17,7 @@ module Authpds
   # :pds_record_identifier:: PDS user method to call to identify record
   # :institution_param_key:: Querystring parameter key for the institution value in this system
   # :validate_url_name:: URL name for validation action in routes (validate_url)
-  # 
+  #
   # == Hooks Available
   # :pds_record_identifier:: Allows for more complex logic in determining what should be used as the record identifier. Defaults to what was set in the pds_record_identifier config.  Returns a Symbol.
   # :valid_sso_session?:: If there is no PDS handle, can we redirect to PDS to establish a SSO session based on some other information?  Returns a Boolean.
@@ -25,15 +25,15 @@ module Authpds
   # :additional_attributes:: Allows for additional attributes to be stored in the record.  Returns a Hash.
   # :expiration_date:: Indicates when the record information should be refreshed.  Defaults to one week ago.  Returns a Date or Time.
   #
-  # == Further Implementation Details 
+  # == Further Implementation Details
   # === Persisting a Session in AuthLogic
-  # When persisting a Session, Authlogic attempts to create the Session based on information available 
+  # When persisting a Session, Authlogic attempts to create the Session based on information available
   # without having to perform an actual login by calling the :persisting? method. Authologic provides several callbacks from the :persisting?
   # method, e.g. :before_persisting, :persist, :after_persisting.  We're using the :persist callback and setting it to :persist_session.
-  # 
+  #
   # === Access to the controller in Session
-  # The class that Session extends, Authologic::Session::Base, has an explicit handle to the current controller via the instance method 
-  # :controller.  This gives our custom instance methods access to cookies, session information, loggers, etc. and also allows them to 
+  # The class that Session extends, Authologic::Session::Base, has an explicit handle to the current controller via the instance method
+  # :controller.  This gives our custom instance methods access to cookies, session information, loggers, etc. and also allows them to
   # perform redirects and renders.
   #
   # === :before_login vs. :login_url
@@ -43,6 +43,7 @@ module Authpds
   module Session
     def self.included(klass)
       klass.class_eval do
+        require 'institutions'
         extend Config
         include AuthpdsCallbackMethods
         include InstanceMethods
@@ -50,7 +51,7 @@ module Authpds
         persist :persist_session
       end
     end
-    
+
     module Config
       # Base pds url
       def pds_url(value = nil)
@@ -106,8 +107,8 @@ module Authpds
         rw_config(:validate_url_name, value, "validate_url")
       end
       alias_method :validate_url_name=, :validate_url_name
-    end 
-    
+    end
+
     module AuthpdsCallbackMethods
       # Hook for more complicated logic to determine PDS user record identifier
       def pds_record_identifier
@@ -118,7 +119,7 @@ module Authpds
       def valid_sso_session?
         return false
       end
-      
+
       # Hook to provide additional authorization requirements
       def additional_authorization
         return true
@@ -128,13 +129,13 @@ module Authpds
       def additional_attributes
         {}
       end
-      
+
       # Hook to update expiration date if necessary
       def expiration_date
         1.week.ago
       end
-    end 
-    
+    end
+
     module InstanceMethods
       require "cgi"
 
@@ -154,7 +155,7 @@ module Authpds
       def logout_url(params={})
         return "#{self.class.pds_url}/pds?func=logout&url=#{CGI::escape(controller.user_session_redirect_url(self.class.redirect_logout_url))}"
       end
-      
+
       # URL to redirect to in the case of establishing a SSO session.
       def sso_url(params={})
         return "#{self.class.pds_url}/pds?func=sso&institute=#{institution_attributes["link_code"]}&calling_system=#{self.class.calling_system}&url=#{CGI::escape(validate_url(params))}"
@@ -171,7 +172,7 @@ module Authpds
           return nil
         end
       end
-      
+
       private
       def authenticated?
         authenticate
@@ -199,10 +200,10 @@ module Authpds
         # If PDS user is not nil (PDS session already established), authorize
         !pds_user.nil? && additional_authorization
       end
-      
+
       # Get the record associated with this PDS user.
       def get_record(login)
-    		record = klass.find_by_smart_case_login_field(login)
+        record = klass.find_by_smart_case_login_field(login)
         record = klass.new login_field => login if record.nil?
         return record
       end
@@ -214,7 +215,7 @@ module Authpds
         # Do this part only if user data has expired.
         if self.attempted_record.expired?
           pds_attributes.each do |record_attr, pds_attr|
-            self.attempted_record.send("#{record_attr}=".to_sym, 
+            self.attempted_record.send("#{record_attr}=".to_sym,
               pds_user.send(pds_attr.to_sym)) if self.attempted_record.respond_to?("#{record_attr}=".to_sym)
           end
           pds_user.class.public_instance_methods(false).each do |pds_attr_reader|
@@ -224,10 +225,10 @@ module Authpds
         end
         self.attempted_record.user_attributes= additional_attributes
       end
-      
-    	# Returns the URL for validating a UserSession on return from a remote login system.
-    	def validate_url(params={})
-    		url = controller.send(validate_url_name, :return_url => controller.user_session_redirect_url(params[:return_url]))
+
+      # Returns the URL for validating a UserSession on return from a remote login system.
+      def validate_url(params={})
+        url = controller.send(validate_url_name, :return_url => controller.user_session_redirect_url(params[:return_url]))
         return url if params.nil? or params.empty?
         url << "?" if url.match('\?').nil?
         params.each do |key, value|
@@ -235,18 +236,18 @@ module Authpds
           url << "&#{self.class.calling_system}_#{key}=#{value}"
         end
         return url
-    	end
-    	
+      end
+
       def validate_url_name
         @validate_url_name ||= self.class.validate_url_name
       end
 
       def institution_attributes
-        @institution_attributes = 
+        @institution_attributes =
           (controller.current_primary_institution.nil? or controller.current_primary_institution.login.nil?) ?
             {} : controller.current_primary_institution.login
       end
-      
+
       def pds_attributes
         @pds_attributes ||= self.class.pds_attributes
       end
