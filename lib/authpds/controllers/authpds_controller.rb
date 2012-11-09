@@ -2,17 +2,22 @@ module Authpds
   module Controllers
     module AuthpdsController
 
+      # Set helper methods when this module is included.
+      def self.included(klass)
+        klass.class_eval do
+          helper_method :current_user_session, :current_user, :current_primary_institution
+        end
+      end
+
       # Get the current UserSession if it exists
       def current_user_session
         @current_user_session ||= UserSession.find
       end
-      helper_method :current_user_session
 
       # Get the current User if there is a UserSession
       def current_user
         @current_user ||= current_user_session.record unless current_user_session.nil?
       end
-      helper_method :current_user, :current_primary_institution
 
       # Determine current primary institution based on:
       #   0. institutions are not being used (returns nil)
@@ -30,7 +35,6 @@ module Authpds
                     primary_institution_from_ip :
                       all_institutions[institution_param]
       end
-      helper_method :current_primary_institution
 
       # Override to add institution.
       def url_for(options={})
