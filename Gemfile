@@ -10,12 +10,7 @@ gemspec
 # Git. Remember to move these dependencies to your gemspec before releasing
 # your gem to rubygems.org.
 
-
 group :test do
   gem 'activerecord-jdbcsqlite3-adapter', :platforms => :jruby
-	gem 'sqlite3', :platforms => :ruby
+  gem 'sqlite3', :platforms => :ruby
 end
-
-gem "ipaddr_range_set", :git => "https://github.com/jrochkind/ipaddr_range_set"
-gem 'institutions', :git => "https://github.com/scotdalton/institutions"
-# gem 'institutions', :path => "/Users/dalton/Documents/workspace/gems/institutions"

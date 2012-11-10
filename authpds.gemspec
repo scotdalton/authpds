@@ -17,8 +17,9 @@ Gem::Specification.new do |s|
   s.test_files = Dir["test/**/*"]
 
   s.add_dependency "rails", "~> 3.2.0"
-  s.add_dependency "authlogic" # used for auth logic :)
-  s.add_dependency "nokogiri" # used for xml parsing
+  s.add_dependency "authlogic", "~> 3.1.3" # used for auth logic :)
+  s.add_dependency "nokogiri", "~> 1.5.5" # used for xml parsing
+  s.add_dependency "institutions"
 
   s.add_development_dependency "sqlite3"
 end
