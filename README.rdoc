@@ -146,5 +146,3 @@ method, e.g. :before_persisting, :persist, :after_persisting.  We're using the :
 The class that Session extends, Authologic::Session::Base, has an explicit handle to the current controller via the instance method 
 :controller.  This gives our custom instance methods access to cookies, session information, loggers, etc. and also allows them to 
 perform redirects and renders.
-
-== Build Status {<img src="https://secure.travis-ci.org/scotdalton/authpds.png"/>}[http://travis-ci.org/scotdalton/authpds]
