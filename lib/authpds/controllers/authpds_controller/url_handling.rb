@@ -10,7 +10,7 @@ module Authpds
 
         # Controller method to generate the Appropriate redirect url
         def user_session_redirect_url(url)
-          (url.nil?) ? (request.referer.nil?) ? root_url : request.referer : url
+          (url.nil? or url.empty?) ? (request.referer.nil?) ? root_url : request.referer : url
         end
       end
     end
