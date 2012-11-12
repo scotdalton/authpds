@@ -17,7 +17,7 @@ ba36:
     :nyuidn => "N18158418", 
     :verification => "6EAF453D8B01E5AC27D9",
     :bor_status => "51",
-		:aleph_permissions => {} }.to_yaml.inspect  %>
+    :aleph_permissions => {} }.to_yaml.inspect  %>
 # std5:
 #   password_salt: <%#= salt = Authlogic::Random.hex_token %>
 #   crypted_password: <%#= Authlogic::CryptoProviders::Sha512.encrypt("std5" + salt) %>
@@ -45,5 +45,5 @@ st75:
     :nyuidn => "N10450419", 
     :verification => "A64C45148D130E78D8AA",
     :bor_status => "50",
-		:aleph_permissions => {} }.to_yaml.inspect  %>
+    :aleph_permissions => {} }.to_yaml.inspect  %>
 

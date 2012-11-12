@@ -66,7 +66,6 @@ class PdsTest < ActiveSupport::TestCase
         assert_equal("N00206454", newschool.nyuidn)
         assert_equal("31", newschool.bor_status)
         assert_equal("0", newschool.bor_type)
-        assert_equal("true", newschool.newschool_ldap)
         assert_equal("Allen", newschool.name)
         assert_equal("Allen", newschool.givenname)
         assert_equal("Jones", newschool.sn)
