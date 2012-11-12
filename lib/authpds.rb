@@ -1,4 +1,3 @@
-require 'active_support/dependencies'
 require 'authlogic'
 require 'require_all'
 require_all "#{File.dirname(__FILE__)}/authpds/"
