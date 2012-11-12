@@ -19,7 +19,7 @@ module Authpds
       def institutions=(new_institutions)
         raise ArgumentError.new("Institutions input should be an array.") unless new_institutions.is_a?(Array)
         new_institutions.collect! { |institution| institution.to_sym }
-        new_institutions.select! { |institution|
+        new_institutions = new_institutions.select { |institution|
           all_institutions[ new_institutions.is_a?(Institutions::Institution) ? institution.code : institution.to_sym]
         }
         self.user_attributes=({:institutions => new_institutions}) unless new_institutions.empty?
