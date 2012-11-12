@@ -10,7 +10,7 @@ gemspec
 # Git. Remember to move these dependencies to your gemspec before releasing
 # your gem to rubygems.org.
 
-group :test do
+group :development, :test do
   gem 'activerecord-jdbcsqlite3-adapter', :platforms => :jruby
   gem 'sqlite3', :platforms => :ruby
 end
