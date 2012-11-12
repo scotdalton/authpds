@@ -8,6 +8,8 @@ class UserSessionsControllerTest < ActiveSupport::TestCase
   end
 
   test "current_user_session" do
-    user_session = controller.current_user_session
+    VCR.use_cassette('nyu') do
+      user_session = controller.current_user_session
+    end
   end
 end

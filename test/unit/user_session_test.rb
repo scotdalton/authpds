@@ -47,20 +47,22 @@ class UserSessionTest < ActiveSupport::TestCase
 
   test "pds_user" do
     user_session = UserSession.new
-    pds_user = user_session.pds_user
-    assert_instance_of(Authpds::Exlibris::Pds::BorInfo, pds_user)
-    assert_equal("N12162279", pds_user.id)
-    assert_equal("N12162279", pds_user.nyuidn)
-    assert_equal("51", pds_user.bor_status)
-    assert_equal("CB", pds_user.bor_type)
-    assert_equal("SCOT THOMAS", pds_user.name)
-    assert_equal("SCOT THOMAS", pds_user.givenname)
-    assert_equal("DALTON", pds_user.sn)
-    assert_equal("Y", pds_user.ill_permission)
-    assert_equal("GA", pds_user.college_code)
-    assert_equal("CSCI", pds_user.dept_code)
-    assert_equal("Information Systems", pds_user.major)
-    assert_equal("NYU", pds_user.institute)
+    VCR.use_cassette('nyu') do
+      pds_user = user_session.pds_user
+      assert_instance_of(Authpds::Exlibris::Pds::BorInfo, pds_user)
+      assert_equal("N12162279", pds_user.id)
+      assert_equal("N12162279", pds_user.nyuidn)
+      assert_equal("51", pds_user.bor_status)
+      assert_equal("CB", pds_user.bor_type)
+      assert_equal("SCOT THOMAS", pds_user.name)
+      assert_equal("SCOT THOMAS", pds_user.givenname)
+      assert_equal("DALTON", pds_user.sn)
+      assert_equal("Y", pds_user.ill_permission)
+      assert_equal("GA", pds_user.college_code)
+      assert_equal("CSCI", pds_user.dept_code)
+      assert_equal("Information Systems", pds_user.major)
+      assert_equal("NYU", pds_user.institute)
+    end
   end
 
   test "persist_session" do
@@ -68,12 +70,14 @@ class UserSessionTest < ActiveSupport::TestCase
     assert_nil(controller.session["authpds_credentials"])
     assert_nil(user_session.send(:attempted_record))
     assert_nil(user_session.record)
-    assert_no_difference('User.count') do
-      user_session.send(:persist_session)
+    VCR.use_cassette('nyu') do
+      assert_no_difference('User.count') do
+        user_session.send(:persist_session)
+      end
+      assert_not_nil(user_session.send(:attempted_record))
+      assert_nil(user_session.record)
+      assert_equal("N12162279", user_session.send(:attempted_record).username)
     end
-    assert_not_nil(user_session.send(:attempted_record))
-    assert_nil(user_session.record)
-    assert_equal("N12162279", user_session.send(:attempted_record).username)
   end
 
   test "find" do
@@ -81,14 +85,16 @@ class UserSessionTest < ActiveSupport::TestCase
     assert_nil(controller.session["authpds_credentials"])
     assert_nil(user_session.send(:attempted_record))
     assert_nil(user_session.record)
-    assert_difference('User.count') {
-      user_session = UserSession.find
-    }
-    assert_not_nil(controller.session["authpds_credentials"])
-    assert_not_nil(user_session.send(:attempted_record))
-    assert_not_nil(user_session.record)
-    assert_equal(controller.session["authpds_credentials"], user_session.record.persistence_token)
-    assert_equal("N12162279", user_session.record.username)
+    VCR.use_cassette('nyu') do
+      assert_difference('User.count') {
+        user_session = UserSession.find
+      }
+      assert_not_nil(controller.session["authpds_credentials"])
+      assert_not_nil(user_session.send(:attempted_record))
+      assert_not_nil(user_session.record)
+      assert_equal(controller.session["authpds_credentials"], user_session.record.persistence_token)
+      assert_equal("N12162279", user_session.record.username)
+    end
   end
 
   test "expiration_date" do

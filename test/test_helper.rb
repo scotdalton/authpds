@@ -1,7 +1,8 @@
+require 'rubygems'
 require 'authlogic'
 require 'authlogic/test_case'
 require "test/unit"
-require 'rubygems'
+require "vcr"
 require "active_record"
 require "active_record/fixtures"
 # Configure Rails Environment
@@ -40,8 +41,13 @@ end
 require File.dirname(__FILE__) + '/../lib/authpds'
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
 
+VCR.configure do |c|
+  c.cassette_library_dir = 'test/vcr_cassettes'
+  c.hook_into :webmock # or :fakeweb
+end
+
 class ActiveSupport::TestCase
-  VALID_PDS_HANDLE_FOR_NYU = '12112012134239298351305592627038'
+  VALID_PDS_HANDLE_FOR_NYU = '12112012141859298424685706599355'
   VALID_PDS_HANDLE_FOR_NEWSCHOOL = '272201212284614806184193096120278'
   VALID_PDS_HANDLE_FOR_COOPER = '272201212284614806184193096120278'
   INVALID_PDS_HANDLE = "Invalid"

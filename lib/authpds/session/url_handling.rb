@@ -47,7 +47,7 @@ module Authpds
           next if [:controller, :action, :return_url].include?(key)
           url << "&#{calling_system}_#{key}=#{CGI::escape(value)}" unless key.nil? or value.nil?
         end
-        return url
+        url
       end
       private :validate_url
     end

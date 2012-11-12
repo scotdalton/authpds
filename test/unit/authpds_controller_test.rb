@@ -16,8 +16,10 @@ class ApplicationControllerTest < ActiveSupport::TestCase
   test "current_user_session" do
     assert_nil(controller.current_user_session)
     controller.cookies[:PDS_HANDLE] = { :value => VALID_PDS_HANDLE_FOR_NYU }
-    user_session = controller.current_user_session
-    assert_not_nil(user_session)
+    VCR.use_cassette('nyu') do
+      user_session = controller.current_user_session
+      assert_not_nil(user_session)
+    end
   end
 
   test "current_user_nil" do
@@ -27,9 +29,11 @@ class ApplicationControllerTest < ActiveSupport::TestCase
   test "current_user" do
     assert_nil(controller.current_user)
     controller.cookies[:PDS_HANDLE] = { :value => VALID_PDS_HANDLE_FOR_NYU }
-    user = controller.current_user
-    assert_not_nil(user)
-    assert_equal("N12162279", user.username)
+    VCR.use_cassette('nyu') do
+      user = controller.current_user
+      assert_not_nil(user)
+      assert_equal("N12162279", user.username)
+    end
   end
 
   test "current_primary_institution_nil" do
@@ -48,9 +52,11 @@ class ApplicationControllerTest < ActiveSupport::TestCase
       assert_nil(controller.current_primary_institution)
       Institutions.loadpaths<< "#{File.dirname(__FILE__)}/../support/config"
       controller.cookies[:PDS_HANDLE] = { :value => VALID_PDS_HANDLE_FOR_NYU }
-      assert_equal("N12162279", controller.current_user.username)
-      assert_equal(Institutions.institutions[:NYU], controller.current_user.primary_institution)
-      assert_equal(Institutions.institutions[:NYU], controller.current_primary_institution)
+      VCR.use_cassette('nyu') do
+        assert_equal("N12162279", controller.current_user.username)
+        assert_equal(Institutions.institutions[:NYU], controller.current_user.primary_institution)
+        assert_equal(Institutions.institutions[:NYU], controller.current_primary_institution)
+      end
     }
   end
 end
