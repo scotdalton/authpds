@@ -11,6 +11,9 @@ gemspec
 # your gem to rubygems.org.
 
 group :development, :test do
-  gem 'activerecord-jdbcsqlite3-adapter', :platforms => :jruby
+  platforms :jruby do
+    gem 'activerecord-jdbcsqlite3-adapter'
+    gem 'jruby-openssl'
+  end
   gem 'sqlite3', :platforms => :ruby
 end
