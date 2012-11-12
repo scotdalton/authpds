@@ -58,7 +58,7 @@ class ActiveSupport::TestCase
   self.use_transactional_fixtures = false
   self.use_instantiated_fixtures  = false
   self.pre_loaded_fixtures = false
-  fixtures :all
+  fixtures :users
   setup :activate_authlogic
 end
 

@@ -37,7 +37,7 @@ class UserSessionTest < ActiveSupport::TestCase
   end
 
   test "primary_institution" do
-    Institutions.loadpaths<< "#{File.dirname(__FILE__)}/../support/config"
+    Institutions.loadpaths<< "#{File.dirname(__FILE__)}/support/config"
     user = User.new
     assert_nothing_raised ArgumentError do
       user.primary_institution= "NYU"
@@ -54,7 +54,7 @@ class UserSessionTest < ActiveSupport::TestCase
   end
 
   test "institutions" do
-    Institutions.loadpaths<< "#{File.dirname(__FILE__)}/../support/config"
+    Institutions.loadpaths<< "#{File.dirname(__FILE__)}/support/config"
     user = User.new
     assert_raise ArgumentError do
       user.institutions= "NYU"
