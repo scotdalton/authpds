@@ -2,67 +2,10 @@ module Authpds
   module ActsAsAuthentic
     def self.included(klass)
       klass.class_eval do
-        require 'institutions'
-        add_acts_as_authentic_module(InstanceMethods, :prepend)
+        add_acts_as_authentic_module(Authpds::ActsAsAuthentic::CoreAttributes, :prepend)
+        add_acts_as_authentic_module(Authpds::ActsAsAuthentic::Expiration, :append)
+        add_acts_as_authentic_module(Authpds::ActsAsAuthentic::InstitutionAttributes, :append)
       end
-    end
-
-    module InstanceMethods
-      def self.included(klass)
-        klass.class_eval do
-          serialize :user_attributes
-          attr_accessor :expiration_date
-        end
-      end
-
-      # Setting the username field also resets the persistence_token if the value changes.
-      def username=(value)
-        write_attribute(:username, value)
-        reset_persistence_token if username_changed?
-      end
-
-      def primary_institution
-        all_institutions[user_attributes[:primary_institution]] unless user_attributes.nil?
-      end
-
-      def primary_institution=(new_primary_institution)
-        new_primary_institution = new_primary_institution.code if new_primary_institution.is_a?(Institutions::Institution)
-        self.user_attributes=({:primary_institution => new_primary_institution.to_sym})
-      end
-
-      def institutions
-        user_attributes[:institutions].collect { |institution|
-          all_institutions[institution] } unless user_attributes.nil?
-      end
-
-      def institutions=(new_institutions)
-        raise ArgumentError.new("Institutions input should be an array.") unless new_institutions.is_a?(Array)
-        new_institutions.collect! { |institution| institution.to_sym }
-        new_institutions.select! { |institution|
-          all_institutions[ new_institutions.is_a?(Institutions::Institution) ? institution.code : institution.to_sym]
-        }
-        self.user_attributes=({:institutions => new_institutions}) unless new_institutions.empty?
-      end
-
-      # "Smart" updating of user_attributes.  Maintains user_attributes that are not explicity overwritten.
-      def user_attributes=(new_attributes)
-        write_attribute(:user_attributes, new_attributes) and return unless new_attributes.kind_of?(Hash)
-        # Set new/updated attributes
-        write_attribute(:user_attributes, (user_attributes || {}).merge(new_attributes))
-      end
-
-      # Returns a boolean based on whether the User has been refreshed recently.
-      # If User#refreshed_at is older than User#expiration_date, the User is expired and the data
-      # may need to be refreshed.
-      def expired?
-        # If the record is older than the expiration date, it is expired.
-        (refreshed_at.nil?) ? true : refreshed_at < expiration_date
-      end
-
-      def all_institutions
-        Institutions.institutions
-      end
-      private :all_institutions
     end
   end
 end

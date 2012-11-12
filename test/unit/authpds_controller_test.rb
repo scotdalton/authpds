@@ -44,11 +44,13 @@ class ApplicationControllerTest < ActiveSupport::TestCase
   end
 
   test "current_primary_institution_user" do
-    assert_nil(controller.current_primary_institution)
-    Institutions.loadpaths<< "#{File.dirname(__FILE__)}/../support/config"
-    controller.cookies[:PDS_HANDLE] = { :value => VALID_PDS_HANDLE_FOR_NYU }
-    assert_equal("N12162279", controller.current_user.username)
-    assert_equal(Institutions.institutions[:NYU], controller.current_user.primary_institution)
-    assert_equal(Institutions.institutions[:NYU], controller.current_primary_institution)
+    assert_nothing_raised{
+      assert_nil(controller.current_primary_institution)
+      Institutions.loadpaths<< "#{File.dirname(__FILE__)}/../support/config"
+      controller.cookies[:PDS_HANDLE] = { :value => VALID_PDS_HANDLE_FOR_NYU }
+      assert_equal("N12162279", controller.current_user.username)
+      assert_equal(Institutions.institutions[:NYU], controller.current_user.primary_institution)
+      assert_equal(Institutions.institutions[:NYU], controller.current_primary_institution)
+    }
   end
 end

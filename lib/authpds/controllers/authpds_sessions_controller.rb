@@ -1,7 +1,6 @@
 module Authpds
   module Controllers
     module AuthpdsSessionsController
-
       # GET /user_sessions/new
       # GET /login
       def new

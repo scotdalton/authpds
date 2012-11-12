@@ -10,7 +10,7 @@ class UserSessionTest < ActiveSupport::TestCase
   test "login_url" do
     user_session = UserSession.new
     assert_equal(
-      "https://logindev.library.nyu.edu/pds?func=load-login&institute=&calling_system=authpds&url=http%3A%2F%2Frailsapp.library.nyu.edu%2Fvalidate%3Freturn_url%3D",
+      "https://logindev.library.nyu.edu/pds?func=load-login&calling_system=authpds&url=http%3A%2F%2Frailsapp.library.nyu.edu%2Fvalidate%3Freturn_url%3D",
         user_session.login_url)
   end
 
@@ -24,7 +24,7 @@ class UserSessionTest < ActiveSupport::TestCase
   test "sso_url" do
     user_session = UserSession.new
     assert_equal(
-    "https://logindev.library.nyu.edu/pds?func=sso&institute=&calling_system=authpds&url=http%3A%2F%2Frailsapp.library.nyu.edu%2Fvalidate%3Freturn_url%3D",
+    "https://logindev.library.nyu.edu/pds?func=sso&calling_system=authpds&url=http%3A%2F%2Frailsapp.library.nyu.edu%2Fvalidate%3Freturn_url%3D",
         user_session.sso_url)
   end
 
@@ -82,7 +82,7 @@ class UserSessionTest < ActiveSupport::TestCase
     assert_nil(user_session.send(:attempted_record))
     assert_nil(user_session.record)
     assert_difference('User.count') {
-        user_session = UserSession.find
+      user_session = UserSession.find
     }
     assert_not_nil(controller.session["authpds_credentials"])
     assert_not_nil(user_session.send(:attempted_record))

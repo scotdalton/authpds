@@ -1,5 +1,5 @@
 NYU:
-  login:
+  auth:
     link_code: NYU
     logout_url: 'http://bobcat.library.nyu.edu'
   default: false
@@ -25,7 +25,7 @@ NYUAD:
     - 128.122.0.1
 
 NYSID:
-  login:
+  auth:
     link_code: NYSID
     logout_url: 'http://bobcat.library.nyu.edu/nysid'
   default: false
@@ -37,7 +37,7 @@ NYSID:
     - 128.122.0.1
 
 CU:
-  login:
+  auth:
     link_code: CU
     logout_url: 'http://bobcat.library.nyu.edu/cooper'
   display_name: Cooper Union Library
@@ -48,7 +48,7 @@ CU:
     - 199.98.16.0-199.98.31.255 
 
 NS:
-  login:
+  auth:
     link_code: NS
     logout_url: 'http://bobcat.library.nyu.edu/newschool'
   display_name: New School Libraries
