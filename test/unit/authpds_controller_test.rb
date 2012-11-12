@@ -10,6 +10,7 @@ class ApplicationControllerTest < ActiveSupport::TestCase
   end
 
   test "current_user_session_nil" do
+    flunk
     assert_nil(controller.current_user_session)
   end
 
