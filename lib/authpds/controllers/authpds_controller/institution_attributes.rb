@@ -28,6 +28,12 @@ module Authpds
                         all_institutions[institution_param]
         end
 
+        # Override Rails ActionController#url_for to add institution.
+        def url_for(options={})
+          options[institution_param_key] ||= institution_param unless institution_param.nil?
+          super options
+        end
+
         # Grab the first institution that matches the client IP
         def primary_institution_from_ip
           Institutions.with_ip(request.remote_ip).first unless request.nil?
