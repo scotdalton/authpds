@@ -1,5 +1,5 @@
 require 'test_helper'
-class UserSessionTest < ActiveSupport::TestCase
+class UserTest < ActiveSupport::TestCase
   def setup
     activate_authlogic
     controller.session[:session_id] = "FakeSessionID"
@@ -47,7 +47,7 @@ class UserSessionTest < ActiveSupport::TestCase
 
   test "primary_institution no institutions" do
     user = User.new
-    assert_nothing_raised ArgumentError do
+    assert_nothing_raised do
       user.primary_institution= "NYU"
     end
     assert_equal(nil, user.primary_institution)
