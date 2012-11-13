@@ -3,7 +3,7 @@ module Authpds
     module Callbacks
       # Hook for more complicated logic to determine PDS user record identifier
       def pds_record_identifier
-        @pds_record_identifier ||= self.class.pds_record_identifier
+        @pds_record_identifier ||= pds_record_identifier
       end
 
       # Hook to determine if we should set up an SSO session

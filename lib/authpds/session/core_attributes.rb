@@ -18,6 +18,10 @@ module Authpds
         @pds_attributes ||= self.class.pds_attributes
       end
 
+      def pds_record_identifier
+        @pds_record_identifier ||= self.class.pds_record_identifier
+      end
+
       def pds_url
         @pds_url ||= self.class.pds_url
       end
