@@ -48,8 +48,10 @@ module Authpds
     include Authpds::Session::Callbacks
     include Authpds::Session::ExceptionHandling
     include Authpds::Session::InstitutionAttributes
+    include Authpds::Session::PdsHandle
     include Authpds::Session::PdsUser
     include Authpds::Session::Record
+    include Authpds::Session::SessionId
     include Authpds::Session::UrlHandling
 
     def self.included(klass)

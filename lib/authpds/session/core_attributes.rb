@@ -33,17 +33,6 @@ module Authpds
       def validate_url_name
         @validate_url_name ||= self.class.validate_url_name
       end
-
-      def pds_handle
-        @pds_handle ||= (controller.cookies[:PDS_HANDLE] || controller.params[:pds_handle])
-      end
-
-      def session_id
-        @session_id ||=
-          (controller.session.respond_to?(:session_id)) ?
-            (controller.session.session_id) ?
-              controller.session.session_id : controller.session[:session_id] : controller.session[:session_id]
-      end
     end
   end
 end
