@@ -20,7 +20,7 @@ Gem::Specification.new do |s|
   s.add_dependency "rails", "~> 3.2.0"
   s.add_dependency "authlogic", "~> 3.1.3" # used for auth logic :)
   s.add_dependency "nokogiri", "~> 1.5.0" # used for xml parsing
-  s.add_dependency "institutions", "~> 0.0.3"
+  s.add_dependency "institutions", "~> 0.0.4"
 
   s.add_development_dependency "rake", "~> 0.9.2.2"
   s.add_development_dependency "vcr", "~> 2.3.0"
