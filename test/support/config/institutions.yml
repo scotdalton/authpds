@@ -1,6 +1,6 @@
 NYU:
   auth:
-    link_code: NYU
+    code: NYU
     logout_url: 'http://bobcat.library.nyu.edu'
   default: false
   display_name: NYU Libraries
@@ -26,7 +26,7 @@ NYUAD:
 
 NYSID:
   auth:
-    link_code: NYSID
+    code: NYSID
     logout_url: 'http://bobcat.library.nyu.edu/nysid'
   default: false
   display_name: New York School of Interior Design Library
@@ -38,7 +38,7 @@ NYSID:
 
 CU:
   auth:
-    link_code: CU
+    code: CU
     logout_url: 'http://bobcat.library.nyu.edu/cooper'
   display_name: Cooper Union Library
   views:
@@ -49,7 +49,7 @@ CU:
 
 NS:
   auth:
-    link_code: NS
+    code: NS
     logout_url: 'http://bobcat.library.nyu.edu/newschool'
   display_name: New School Libraries
   views:

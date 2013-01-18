@@ -50,14 +50,14 @@ Calling the institution "default" will make it the default:
 
   default:
     login:
-      link_code: INST01
+      code: INST01
     display_name: My Institution
 
 An alternative syntax:
 
   INST01:
     login:
-      link_code: INST01
+      code: INST01
     default: true
     display_name: My Institution
 
@@ -65,15 +65,15 @@ You can create multiple institution listings as follows:
 
   INST01:
     login:
-      link_code: INST01
+      code: INST01
     default: true
     display_name: My Institution
   INST02:
     login:
-      link_code: INST01
+      code: INST01
     display_name: Your Institution
 
-The two separate institutions above share a link_code in this example. The link_code attribute determines the institute parameter in the PDS url.
+The two separate institutions above share a code in this example. The code attribute determines the institute parameter in the PDS url.
 
 ==== Institution fields
 :name:: Institution name
