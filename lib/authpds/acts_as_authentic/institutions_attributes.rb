@@ -9,7 +9,7 @@ module Authpds
 
       def primary_institution=(new_primary_institution)
         new_primary_institution = new_primary_institution.code if new_primary_institution.is_a?(Institutions::Institution)
-        self.user_attributes=({:primary_institution => new_primary_institution.to_sym})
+        self.user_attributes=({:primary_institution => new_primary_institution.to_sym}) unless new_primary_institution.nil?
       end
 
       def institutions
