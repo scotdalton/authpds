@@ -20,11 +20,11 @@ module Authpds
         def current_primary_institution
           @current_primary_institution ||=
             (institution_param.nil? or all_institutions[institution_param].nil?) ?
-              (primary_institution_from_ip.nil?) ?
-                (@current_user.nil? or current_user.primary_institution.nil?) ?
+              ((primary_institution_from_ip.nil?) ?
+                ((@current_user.nil? or current_user.primary_institution.nil?) ?
                   Institutions.defaults.first :
-                    current_user.primary_institution :
-                      primary_institution_from_ip :
+                    current_user.primary_institution) :
+                      primary_institution_from_ip) :
                         all_institutions[institution_param]
         end
 
