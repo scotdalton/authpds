@@ -53,6 +53,13 @@ class UserTest < ActiveSupport::TestCase
     assert_equal(nil, user.primary_institution)
   end
 
+  test "primary_institution= nil" do
+    user = User.new
+    assert_nothing_raised do
+      user.primary_institution= "NYU"
+    end
+  end
+
   test "institutions" do
     Institutions.loadpaths<< "#{File.dirname(__FILE__)}/support/config"
     user = User.new
