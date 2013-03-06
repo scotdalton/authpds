@@ -1,9 +1,11 @@
 = Authpds
+{<img src="https://badge.fury.io/rb/authpds.png" alt="Gem Version" />}[http://badge.fury.io/rb/authpds]
 {<img src="https://api.travis-ci.org/scotdalton/authpds.png?branch=master" alt="Build Status" />}[https://travis-ci.org/scotdalton/authpds]
 {<img src="https://gemnasium.com/scotdalton/authpds.png" alt="Dependency Status" />}[https://gemnasium.com/scotdalton/authpds]
-{<img src="https://codeclimate.com/badge.png" alt="Code Climage" />}[https://codeclimate.com/github/scotdalton/authpds]
+{<img src="https://codeclimate.com/github/scotdalton/authpds.png" />}[https://codeclimate.com/github/scotdalton/authpds]
+{<img src="https://coveralls.io/repos/scotdalton/authpds/badge.png?branch=master" alt="Coverage Status" />}[https://coveralls.io/r/scotdalton/authpds]
 
-This gem provides a mechanism for authenticating via Ex Libris' Patron Directory Services (PDS) and provides hooks for making authorization decisions based on the user information provided by PDS.  It leverages the authlogic gem and depends on a User-like model.
+Libraries for authenticating via Ex Libris' Patron Directory Services (PDS) and provides hooks for making authorization decisions based on the user information provided by PDS.  It leverages the authlogic gem and depends on a User-like model.
 
 == Basics
 === Generate User-like model

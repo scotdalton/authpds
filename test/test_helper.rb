@@ -1,3 +1,5 @@
+require 'coveralls'
+Coveralls.wear!
 require 'rubygems'
 require 'authlogic'
 require 'authlogic/test_case'
