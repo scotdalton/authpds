@@ -5,7 +5,7 @@ module Authpds
       # GET /login
       def new
         @user_session = UserSession.new(params)
-        redirect_to @user_session.login_url(params) unless @user_session.login_url.nil?
+        (redirect_to @user_session.login_url(params) and return) unless @user_session.login_url.nil?
         raise RuntimeError.new( "Error in #{self.class}.\nNo login url defined") if @user_session.login_url.nil?
       end
 
