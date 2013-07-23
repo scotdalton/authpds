@@ -18,6 +18,8 @@ Gem::Specification.new do |s|
 
   s.add_dependency "require_all", "~> 1.2.1"
   s.add_dependency "authlogic", "~> 3.1.3" # used for auth logic :)
+  s.add_dependency 'activerecord', '~> 3.2'
+  s.add_dependency 'activesupport', '~> 3.2'
   s.add_dependency "nokogiri", "~> 1.5.3" # used for xml parsing
   s.add_dependency "institutions", "~> 0.0.4"
 
