@@ -11,7 +11,8 @@ module Authpds
 
       # GET /validate
       def validate
-        @user_session = UserSession.create(params[:user_session])
+        # Only create a new one if it doesn't exist
+        @user_session ||= UserSession.create(params[:user_session])
         redirect_to (params[:return_url].nil?) ? root_url : params[:return_url]
       end
 
