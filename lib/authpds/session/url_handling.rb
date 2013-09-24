@@ -16,18 +16,21 @@ module Authpds
 
       # URL to redirect to after logout.
       def logout_url(params={})
-        auth_pds_url "logout", user_session_redirect_url(redirect_logout_url), params
+        auth_pds_url "logout",
+          user_session_redirect_url(redirect_logout_url), params
       end
 
       def auth_pds_login_url(func, params)
-        auth_pds_url func, validate_url(params), :institute => insitution_code, :calling_system => calling_system
+        auth_pds_url func, validate_url(params), 
+          :institute => insitution_code, :calling_system => calling_system
       end
-      protected :auth_pds_login_url
+      private :auth_pds_login_url
 
       def auth_pds_url(func, url, params)
         auth_pds_url = "#{pds_url}/pds?func=#{func}"
         params.each_pair do |key, value|
-          auth_pds_url << "&#{key}=#{CGI::escape(value)}" unless key.nil? or value.nil?
+          next if key.blank? or value.blank?
+          auth_pds_url << "&#{key}=#{CGI::escape(value)}"
         end
         auth_pds_url << "&url=#{CGI::escape(url)}"
       end
@@ -38,14 +41,17 @@ module Authpds
       end
       private :user_session_redirect_url
 
-      # Returns the URL for validating a UserSession on return from a remote login system.
+      # Returns the URL for validating a UserSession on 
+      # return from a remote login system
       def validate_url(params={})
-        url = controller.send(validate_url_name, :return_url => user_session_redirect_url(params[:return_url]))
-        return url if params.nil? or params.empty?
-        url << "?" if url.match('\?').nil?
+        url = controller.send(validate_url_name, 
+          :return_url => user_session_redirect_url(params[:return_url]))
+        return url if params.blank?
+        url << "?" if url.match('\?').blank?
         params.each do |key, value|
           next if [:controller, :action, :return_url].include?(key)
-          url << "&#{calling_system}_#{key}=#{CGI::escape(value)}" unless key.nil? or value.nil?
+          next if key.blank? or value.blank?
+          url << "&#{calling_system}_#{key}=#{CGI::escape(value)}"
         end
         url
       end

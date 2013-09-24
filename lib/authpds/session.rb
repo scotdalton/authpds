@@ -20,7 +20,7 @@ module Authpds
   #
   # == Hooks Available
   # :pds_record_identifier:: Allows for more complex logic in determining what should be used as the record identifier. Defaults to what was set in the pds_record_identifier config.  Returns a Symbol.
-  # :valid_sso_session?:: If there is no PDS handle, can we redirect to PDS to establish a SSO session based on some other information?  Returns a Boolean.
+  # :attempt_sso:: If there is no PDS handle, can we attempt to establish a PDS session based on some other information?  Returns a Boolean.
   # :additional_authorization:: Allows for additions to the authorization decision.  Returns a Boolean.
   # :additional_attributes:: Allows for additional attributes to be stored in the record.  Returns a Hash.
   # :expiration_date:: Indicates when the record information should be refreshed.  Defaults to one week ago.  Returns a Date or Time.
@@ -51,7 +51,6 @@ module Authpds
     include Authpds::Session::PdsHandle
     include Authpds::Session::PdsUser
     include Authpds::Session::Record
-    include Authpds::Session::SessionId
     include Authpds::Session::UrlHandling
 
     def self.included(klass)

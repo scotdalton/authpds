@@ -6,8 +6,8 @@ module Authpds
         @pds_record_identifier ||= self.class.pds_record_identifier
       end
 
-      # Hook to determine if we should set up an SSO session
-      def valid_sso_session?
+      # Hook to determine if we should attempt to establish a PDS session
+      def attempt_sso?
         return false
       end
 

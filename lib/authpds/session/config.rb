@@ -21,8 +21,10 @@ module Authpds
 
       # Mapping of PDS attributes
       def pds_attributes(value = nil)
-        value.each_value { |pds_attr| pds_attr.gsub!("-", "_") } unless value.nil?
-        rw_config(:pds_attributes, value, {:email => "email", :firstname => "name", :lastname => "name", :primary_institution => "institute" })
+        value.each_value { |pds_attr|
+          pds_attr.gsub!("-", "_") } unless value.nil?
+        rw_config(:pds_attributes, value, { email: "email", firstname: "name",
+          lastname: "name", primary_institution: "institute" })
       end
       alias_method :pds_attributes=, :pds_attributes
 
@@ -36,7 +38,7 @@ module Authpds
       def login_inaccessible_url(value = nil)
         rw_config(:login_inaccessible_url, value, "")
       end
-      alias_method :redirect_logout_url=, :redirect_logout_url
+      alias_method :login_inaccessible_url=, :login_inaccessible_url
 
       # PDS user method to call to identify record
       def pds_record_identifier(value = nil)

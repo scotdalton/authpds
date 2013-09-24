@@ -16,14 +16,14 @@ Gem::Specification.new do |s|
   s.files = Dir["{app,config,db,lib}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.rdoc"]
   s.test_files = Dir["test/**/*"]
 
-  s.add_dependency "require_all", "~> 1.2.1"
-  s.add_dependency "authlogic", "~> 3.1.3" # used for auth logic :)
-  s.add_dependency 'activerecord', '~> 3.2'
-  s.add_dependency 'activesupport', '~> 3.2'
-  s.add_dependency "nokogiri", "~> 1.5.3" # used for xml parsing
-  s.add_dependency "institutions", "~> 0.0.4"
+  s.add_dependency "require_all", "~> 1.3.1"
+  s.add_dependency "authlogic", "~> 3.3.0"
+  s.add_dependency 'activerecord', '~> 3.2.14'
+  s.add_dependency 'activesupport', '~> 3.2.14'
+  s.add_dependency "nokogiri", "~> 1.6.0"
+  s.add_dependency "institutions", "~> 0.0.6"
 
-  s.add_development_dependency "rake", "~> 10.0.3"
-  s.add_development_dependency "vcr", "~> 2.4.0"
-  s.add_development_dependency "webmock", "~> 1.9.0"
+  s.add_development_dependency "rake", "~> 10.1.0"
+  s.add_development_dependency "vcr", "~> 2.5.0"
+  s.add_development_dependency "webmock", "~> 1.13.0"
 end
