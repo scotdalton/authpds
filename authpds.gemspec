@@ -21,7 +21,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'activerecord', '~> 3.2.14'
   s.add_dependency 'activesupport', '~> 3.2.14'
   s.add_dependency "nokogiri", "~> 1.6.0"
-  s.add_dependency "institutions", "~> 0.0.7"
+  s.add_dependency "institutions", "~> 0.1.1"
 
   s.add_development_dependency "rake", "~> 10.1.0"
   s.add_development_dependency "vcr", "~> 2.5.0"

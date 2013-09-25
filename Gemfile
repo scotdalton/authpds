@@ -6,7 +6,7 @@ source "http://rubygems.org"
 gemspec
 
 # Add coveralls for testing.
-gem "coveralls", "~> 0.7.0", :require => false, :group => :test
+gem "coveralls", "~> 0.7.0", :require => false, group: :test
 
 # Declare any dependencies that are still in development here instead of in
 # your gemspec. These might include edge Rails or gems from your path or
@@ -18,5 +18,5 @@ group :development, :test do
     gem 'activerecord-jdbcsqlite3-adapter'
     gem 'jruby-openssl'
   end
-  gem 'sqlite3', :platforms => :ruby
+  gem 'sqlite3', platforms: :ruby
 end
