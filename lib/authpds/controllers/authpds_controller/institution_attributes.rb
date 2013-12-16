@@ -8,6 +8,7 @@ module Authpds
         def self.included(klass)
           klass.class_eval do
             helper_method :current_primary_institution
+            helper_method :url_for
           end
         end
 
@@ -30,7 +31,9 @@ module Authpds
 
         # Override Rails ActionController#url_for to add institution.
         def url_for(options={})
-          options[institution_param_key] ||= institution_param unless institution_param.nil?
+          if institution_param.present? and options.is_a? Hash
+            options[institution_param_key] ||= institution_param
+          end
           super options
         end
 
