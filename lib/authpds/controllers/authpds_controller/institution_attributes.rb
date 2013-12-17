@@ -4,10 +4,13 @@ module Authpds
       module InstitutionAttributes
         require 'institutions'
 
-        # Set helper methods when this module is included.
+        # Set helper methods when this module is included
+        # from a controller
         def self.included(klass)
           klass.class_eval do
-            helper_method :current_primary_institution
+            if klass.respond_to? :helper_method
+              helper_method :current_primary_institution
+            end
           end
         end
 
@@ -28,7 +31,7 @@ module Authpds
                         all_institutions[institution_param]
         end
 
-        # Override Rails ActionController#url_for to add institution.
+        # Override Rails #url_for to add institution 
         def url_for(options={})
           if institution_param.present? and options.is_a? Hash
             options[institution_param_key] ||= institution_param
