@@ -28,5 +28,7 @@ group :development, :test do
     gem 'rubysl-test-unit'
     # Needed for coveralls
     gem 'rubinius-coverage'
+    # Need the racc parser for rails
+    gem 'racc'
   end
 end
