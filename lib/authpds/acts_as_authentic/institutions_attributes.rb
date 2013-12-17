@@ -36,7 +36,7 @@ module Authpds
           if institution.is_a?(Institutions::Institution)
             institution.code
           else
-            insitution.to_sym
+            institution.to_sym
           end
         end
         # Whitelist the institutions
