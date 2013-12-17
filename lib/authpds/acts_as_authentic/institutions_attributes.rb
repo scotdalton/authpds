@@ -41,7 +41,7 @@ module Authpds
         end
         # Whitelist the institutions
         new_institutions = new_institutions.select do |institution|
-          all_institutions[institution_code].present?
+          all_institutions[institution].present?
         end
         # Add them to the user attributes
         if new_institutions.present?
