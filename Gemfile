@@ -20,3 +20,7 @@ group :development, :test do
   end
   gem 'sqlite3', platforms: :ruby
 end
+
+platforms :rbx do
+  gem 'rubysl', '~> 2.0' # if using anything in the ruby standard library
+end
