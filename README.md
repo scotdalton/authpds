@@ -120,7 +120,7 @@ change the line below accordingly.
       include Authpds::Controllers::AuthpdsController
     end
 
-### Mixin institutions url helpers into ApplicationHelper
+### Mixin institution url helpers into ApplicationHelper
     module ApplicationHelper
       include Authpds::Helpers::Institution::UrlHelper
     end
