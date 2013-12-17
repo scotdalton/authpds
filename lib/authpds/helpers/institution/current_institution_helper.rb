@@ -13,8 +13,8 @@ module Authpds
         #   4. first default institution
         def current_primary_institution
           @current_primary_institution ||= case
-            when (institution_param.present? && institutions[institution_param])
-              institutions[institution_param]
+            when (institution_param.present? && all_institutions[institution_param])
+              all_institutions[institution_param]
             when primary_institution_from_ip.present?
               primary_institution_from_ip
             when (@current_user && current_user.primary_institution)
@@ -34,10 +34,10 @@ module Authpds
         private :primary_institution_from_ip
 
         # All institutions
-        def institutions
-          @institutions ||= Institutions.institutions
+        def all_institutions
+          @all_institutions ||= Institutions.institutions
         end
-        private :institutions
+        private :all_institutions
       end
     end
   end
