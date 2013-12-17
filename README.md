@@ -85,8 +85,7 @@ The code attribute determines the institute parameter in the PDS url.
 | ----- | ----------- |
 | `name` | Institution name |
 | `display_name` | Name to display to users. |
-| `default` | Boolean indicating whether this is a default Institution.
-Alternatively, an Institution can be named 'default'.|
+| `default` | Boolean indicating whether this is a default Institution. Alternatively, an Institution can be named 'default'.|
 | `parent_institution` | A parent Institution from which this child will inherit fields. |
 | `ip_addresses` | IP addresses associated with the Institution. |
 | `login` | Login configurations associated with the Institution. |
@@ -149,9 +148,7 @@ and further details about the module.
 ## Hooks Available for Overriding
 | Hook | Description |
 | ---- | ----------- |
-| `#pds_record_identifier` | Allows for more complex logic in determining what should be
-used as the record identifier. Defaults to what was set in the `pds_record_identifier` config.
-Returns a Symbol. |
+| `#pds_record_identifier` | Allows for more complex logic in determining what should be used as the record identifier. Defaults to what was set in the `pds_record_identifier` config. Returns a Symbol. |
 | `#attempt_sso?` | If there is no PDS handle, can we attempt to establish a PDS
 session based on some other information?  Returns a Boolean. |
 | `#additional_authorization` | Allows for additions to the authorization decision. Returns a Boolean. |
