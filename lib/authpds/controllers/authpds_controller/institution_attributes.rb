@@ -8,7 +8,6 @@ module Authpds
         def self.included(klass)
           klass.class_eval do
             helper_method :current_primary_institution
-            helper_method :url_for
           end
         end
 
