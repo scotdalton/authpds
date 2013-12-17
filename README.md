@@ -81,6 +81,8 @@ The two separate institutions above share a code in this example.
 The code attribute determines the institute parameter in the PDS url.
 
 #### Institution fields
+| Field | Description |
+| ----- | ----------- |
 | `name` | Institution name |
 | `display_name` | Name to display to users. |
 | `default` | Boolean indicating whether this is a default Institution.
@@ -132,6 +134,8 @@ The documentation below describes the hooks available for overriding, PDS config
 and further details about the module.
 
 ## Config Accessors Available
+| Accessor | Description |
+| -------- | ----------- |
 | `#pds_url` | Base pds url |
 | `#calling_system` | Name of the system (authpds) |
 | `#anonymous` | Does the system allow anonymous access? (true) |
@@ -143,6 +147,8 @@ and further details about the module.
 | `#validate_url_name` | URL name for validation action in routes (validate_url) |
 
 ## Hooks Available for Overriding
+| Hook | Description |
+| ---- | ----------- |
 | `#pds_record_identifier` | Allows for more complex logic in determining what should be
 used as the record identifier. Defaults to what was set in the `pds_record_identifier` config.
 Returns a Symbol. |
