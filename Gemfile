@@ -19,11 +19,9 @@ group :development, :test do
     gem 'jruby-openssl'
   end
   gem 'sqlite3', platforms: :ruby
-end
-
-platforms :rbx do
-  gem 'rubysl', '~> 2.0' # if using anything in the ruby standard library
-  gem 'rubinius-coverage'
-  gem 'rubysl-test-unit'
-  gem "racc"
+  platforms :rbx do
+    gem 'rubysl', '~> 2.0' # if using anything in the ruby standard library
+    gem 'rubysl-json'
+    gem 'rubysl-test-unit'
+  end
 end
