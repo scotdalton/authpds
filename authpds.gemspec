@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
   s.description = "Libraries that use Ex Libris products, can integrate Rails application with PDS to provide single sign-on across systems."
   s.license     = 'MIT'
 
-  s.files = Dir["{app,config,db,lib}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.rdoc"]
+  s.files = Dir["{app,config,db,lib}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.md"]
   s.test_files = Dir["test/**/*"]
 
   s.add_dependency "require_all", "~> 1.3.1"
