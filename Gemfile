@@ -20,8 +20,13 @@ group :development, :test do
   end
   gem 'sqlite3', platforms: :ruby
   platforms :rbx do
-    gem 'rubysl', '~> 2.0' # if using anything in the ruby standard library
+    # Need to include the Ruby Standard library for rubinius
+    gem 'rubysl', '~> 2.0'
+    # and the standard library JSON since it's not included above
     gem 'rubysl-json'
+    # and ditto for TestUnit
     gem 'rubysl-test-unit'
+    # Needed for coveralls
+    gem 'rubinius-coverage'
   end
 end
