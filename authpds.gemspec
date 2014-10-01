@@ -18,7 +18,7 @@ Gem::Specification.new do |s|
   s.test_files = Dir["test/**/*"]
 
   s.add_dependency "require_all", "~> 1.3.1"
-  s.add_dependency "authlogic", "~> 3.3.0"
+  s.add_dependency "authlogic", ">= 3.3.0"
   s.add_dependency 'activerecord', '>= 3.2.14'
   s.add_dependency 'activesupport', '>= 3.2.14'
   s.add_dependency "nokogiri", "~> 1.6.0"
