@@ -22,8 +22,6 @@ group :development, :test do
   platforms :rbx do
     # Need to include the Ruby Standard library for rubinius
     gem 'rubysl', '~> 2.0'
-    # and the standard library JSON since it's not included above
-    gem 'rubysl-json'
     # and ditto for TestUnit
     gem 'rubysl-test-unit'
     # Needed for coveralls
