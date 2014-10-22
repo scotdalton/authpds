@@ -3,6 +3,7 @@ Coveralls.wear!
 require 'rubygems'
 require 'authlogic'
 require 'authlogic/test_case'
+require 'minitest/autorun'
 require "test/unit"
 require "vcr"
 require "active_record"
@@ -31,8 +32,8 @@ ActiveRecord::Schema.define(:version => 1) do
     t.datetime "last_request_at"
     t.datetime "current_login_at"
     t.datetime "last_login_at"
-    t.string   "last_login_ip" 
-    t.string   "current_login_ip" 
+    t.string   "last_login_ip"
+    t.string   "current_login_ip"
     t.text     "user_attributes"
     t.datetime "refreshed_at"
     t.timestamps
@@ -69,17 +70,17 @@ class Authlogic::TestCase::MockController
   end
 
   include Authpds::Controllers::AuthpdsController
-  
+
   def url_for(options={})
     return "http://railsapp.library.nyu.edu/validate?return_url=#{options[:return_url]}"
   end
-  
+
   def root_url
   end
 
   def redirect_to(*args)
   end
-  
+
   def validate_url(options={})
     return "http://railsapp.library.nyu.edu/validate?return_url=#{options[:return_url]}"
   end
@@ -91,7 +92,7 @@ class Authlogic::TestCase::MockController
   def request
     @request ||= Authlogic::TestCase::MockRequest.new(self)
   end
-  
+
   def env
     @env ||= {'REMOTE_ADDR' => "128.122.149.239"}
   end
