@@ -10,11 +10,10 @@ require "active_record/fixtures"
 # Configure Rails Environment
 ENV["RAILS_ENV"] = "test"
 
-ActiveRecord::Base.establish_connection(:adapter => "sqlite3", :database => ":memory:")
 logger = Logger.new(STDOUT)
 logger.level= Logger::FATAL
 ActiveRecord::Base.logger = logger
-ActiveRecord::Base.configurations = true
+ActiveRecord::Base.establish_connection(adapter: :sqlite3, database: ':memory:')
 ActiveRecord::Schema.define(:version => 1) do
   drop_table :users if table_exists?(:users)
   create_table :users do |t|
