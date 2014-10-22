@@ -4,7 +4,6 @@ require 'rubygems'
 require 'authlogic'
 require 'authlogic/test_case'
 require 'minitest/autorun'
-require "test/unit"
 require "vcr"
 require "active_record"
 require "active_record/fixtures"
